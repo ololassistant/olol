@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OLOL Assistant</title>
+
+    <style>
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-image: url("church.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+/* Main chat area */
+.chat-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 25px;
+}
+
+/* Title */
+h1 {
+    text-align: center;
+    color: white;
+}
+
+/* Greeting */
+#greeting {
+    text-align: center;
+    color: white;
+    font-size: 18px;
+}
+
+/* Quick buttons */
+.quick-buttons {
+    text-align: center;
+    margin: 20px 0;
+}
+
+button {
+    background: rgba(0, 0, 0, 0.65);
+    color: white;
+    border: 1px solid white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Question area */
+.question-area {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.65);
+    color: white;
+    border: 1px solid white;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+input::placeholder {
+    color: white;
+}
+
+/* AI answer box */
+#answer-box {
+    margin-top: 25px;
+    background: rgba(0, 0, 0, 0.70);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* AI name */
+.ai-title {
+    font-weight: bold;
+    font-size: 17px;
+    margin-bottom: 12px;
+}
+
+/* AI answer */
+#answer {
+    color: white;
+    white-space: pre-line;
+    line-height: 1.6;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+
+    .chat-container {
+        margin: 20px 10px;
+        padding: 15px;
+    }
+
+    .question-area {
+        flex-direction: column;
+    }
+
+    input {
+        width: auto;
+    }
+}
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="chat-container">
+
+    <h1>OLOL Assistant</h1>
+
+    <p id="greeting">
+        👋 Hello! Welcome. How can I help you?
+    </p>
+
+    <div class="quick-buttons">
+
+        <button onclick="showAnswer('mass')">
+            Mass Times
+        </button>
+
+        <button onclick="showAnswer('activities')">
+            Activities
+        </button>
+
+        <button onclick="showAnswer('contact')">
+            Contact
+        </button>
+
+        <button onclick="showAnswer('location')">
+            Location
+        </button>
+
+    </div>
+
+    <div class="question-area">
+
+        <input
+            type="text"
+            id="question"
+            placeholder="Type your question"
+        >
+
+        <button onclick="answerQuestion()">
+            Ask
+        </button>
+
+    </div>
+
+
+    <!-- AI ANSWER BOX -->
+
+    <div id="answer-box">
+
+        <div class="ai-title">
+            🤖 Parish Assistant
+        </div>
+
+        <div id="answer">
+            Ask me something about the parish.
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   AI TYPING EFFECT
+========================= */
+
+function typeAnswer(answer) {
+
+    let answerBox = document.getElementById("answer");
+
+    answerBox.textContent = "🤖 AI is typing...";
+
+    setTimeout(function() {
+
+        answerBox.textContent = "";
+
+        let i = 0;
+
+        let typing = setInterval(function() {
+
+            answerBox.textContent += answer.charAt(i);
+
+            i++;
+
+            if (i >= answer.length) {
+
+                clearInterval(typing);
+
+            }
+
+        }, 25);
+
+    }, 800);
+}
+
+
+/* =========================
+   ASK QUESTION
+========================= */
+
+function answerQuestion() {
+
+    let question =
+        document.getElementById("question")
+        .value
+        .toLowerCase();
+
+    let answer =
+        "Sorry, I don't have an answer for that question.";
+
+
+    /* MASS */
+
+    if (
+        question.includes("mass") ||
+        question.includes("mass schedule") ||
+        question.includes("mass timing") ||
+        question.includes("what time is mass") ||
+        question.includes("when is mass") ||
+        question.includes("sunday mass") ||
+        question.includes("mass hours hour") ||
+        question.includes("mass timetable") ||
+        question.includes("bulletin parish") ||
+        question.includes("wekend masses") ||
+        question.includes("av chapels") ||
+        question.includes("chapels") ||
+        question.includes("chapel") ||
+        question.includes("av") ||
+        question.includes("ctk") ||
+        question.includes("tasek") ||
+        question.includes("buntong") ||
+        question.includes("jelapang") ||
+        question.includes("sebastian") || question.includes("municipal") 
+    ) {
+
+        answer =
+        "SUNDAY MASSES\n\n" +
+
+        "7.00 am (Tamil)\n" +
+        "9.00 am (English)\n" +
+        "11.00 am (Bahasa - 4th Sunday)\n" +
+        "6.00 pm (Tamil - In chapels)\n\n" +
+
+        "Chapel of St. Sebastian, Municipal - 1st Sunday\n" +
+        "Chapel of St. Francis of Assisi, Tasek - 2nd Sunday\n" +
+        "Chapel of St. Annai Velanganny, Jelapang - 3rd Sunday\n" +
+        "Chapel of Christ the King, Buntong Tiga - 4th Sunday\n\n" +
+
+        "Weekdays Masses may change from time to time. " +
+        "Please refer to the parish bulletin on the Parish News site.";
+    }
+
+
+    /* PARISH NEWS */
+
+    else if (
+        question.includes("parish news") ||
+        question.includes("parish activities")
+    ) {
+
+        answer =
+        "Please click below link\n\n" +
+
+        "https://sites.google.com/d/1omjNmDoo0bs_V0dnaIGaYZ3L7RjohZ-I/p/1mcxGvd4Flnq2dhK7Yl3QN0XbwwrN86le/edit\n\n" +
+
+        "Parish activities\n" +
+        "Social engagement.";
+    }
+
+
+    /* CONTACT */
+
+    else if (
+        question.includes("contact") ||
+        question.includes("phone") ||
+        question.includes("number") ||
+        question.includes("email")
+    ) {
+
+        answer =
+        "You can contact the parish office during office hours\n\n" +
+
+        "Tel 055279349\n" +
+
+        "Email lourdes.ipoh@pgdiocese.org.";
+    }
+
+
+    /* LOCATION */
+
+    else if (
+        question.includes("address") ||
+        question.includes("location")
+    ) {
+
+        answer =
+        "Our parish is located in Ipoh\n\n" +
+
+        "Address 45, Jalan Silibin, Taman Lim, 30100 Ipoh, Perak.";
+    }
+
+
+    typeAnswer(answer);
+}
+
+
+/* =========================
+   QUICK BUTTONS
+========================= */
+
+function showAnswer(topic) {
+
+
+    /* MASS */
+
+    if (topic === "mass") {
+
+        typeAnswer(
+
+            "SUNDAY MASSES\n\n" +
+
+            "7.00 am (Tamil)\n" +
+            "9.00 am (English)\n" +
+            "11.00 am (Bahasa - 4th Sunday)\n" +
+            "6.00 pm (Tamil - In chapels)\n\n" +
+
+            "CHAPELS\n\n" +
+
+            "Chapel of St. Sebastian, Municipal - 1st Sunday\n" +
+            "Chapel of St. Francis of Assisi, Tasek - 2nd Sunday\n" +
+            "Chapel of St. Annai Velanganny, Jelapang - 3rd Sunday\n" +
+            "Chapel of Christ the King, Buntong Tiga - 4th Sunday\n\n" +
+
+            "Weekend Masses may change from time to time. " +
+            "Please refer to the parish bulletin on the Parish News site."
+
+        );
+
+    }
+
+
+    /* ACTIVITIES */
+
+    else if (topic === "activities") {
+
+        typeAnswer(
+
+            "Our parish activities include youth activities, catechism, prayer sessions and other parish programs."
+
+        );
+
+    }
+
+
+    /* CONTACT */
+
+    else if (topic === "contact") {
+
+        typeAnswer(
+
+            "You can contact the parish office during office hours."
+
+        );
+
+    }
+
+
+    /* LOCATION */
+
+    else if (topic === "location") {
+
+        typeAnswer(
+
+            "Our parish is located in Ipoh\n\n" +
+
+            "Address 45, Jalan Silibin, Taman Lim, 30100 Ipoh, Perak."
+
+        );
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
