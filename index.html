@@ -146,8 +146,8 @@ input::placeholder {
             Contact
         </button>
 
-        <button onclick="showAnswer('location')">
-            Location
+        <button onclick="showAnswer('calendar')">
+            📅 Calendar
         </button>
 
     </div>
@@ -188,21 +188,36 @@ input::placeholder {
 
 /* =========================
    AI TYPING EFFECT
+   FIXED — PREVENTS SCRAMBLED TEXT
 ========================= */
+
+let typingInterval = null;
+let typingTimeout = null;
 
 function typeAnswer(answer) {
 
     let answerBox = document.getElementById("answer");
 
+    /* STOP ANY PREVIOUS TYPING */
+    if (typingInterval !== null) {
+        clearInterval(typingInterval);
+        typingInterval = null;
+    }
+
+    if (typingTimeout !== null) {
+        clearTimeout(typingTimeout);
+        typingTimeout = null;
+    }
+
     answerBox.textContent = "🤖 AI is typing...";
 
-    setTimeout(function() {
+    typingTimeout = setTimeout(function() {
 
         answerBox.textContent = "";
 
         let i = 0;
 
-        let typing = setInterval(function() {
+        typingInterval = setInterval(function() {
 
             answerBox.textContent += answer.charAt(i);
 
@@ -210,7 +225,8 @@ function typeAnswer(answer) {
 
             if (i >= answer.length) {
 
-                clearInterval(typing);
+                clearInterval(typingInterval);
+                typingInterval = null;
 
             }
 
@@ -229,101 +245,452 @@ function answerQuestion() {
     let question =
         document.getElementById("question")
         .value
-        .toLowerCase();
+        .toLowerCase()
+        .trim();
 
     let answer =
         "Sorry, I don't have an answer for that question.";
 
 
-    /* MASS */
+/* GREETING */
 
-    if (
-        question.includes("mass") ||
-        question.includes("mass schedule") ||
-        question.includes("mass timing") ||
-        question.includes("what time is mass") ||
-        question.includes("when is mass") ||
-        question.includes("sunday mass") ||
-        question.includes("mass hours hour") ||
-        question.includes("mass timetable") ||
-        question.includes("bulletin parish") ||
-        question.includes("wekend masses") ||
-        question.includes("av chapels") ||
-        question.includes("chapels") ||
-        question.includes("chapel") ||
-        question.includes("av") ||
-        question.includes("ctk") ||
-        question.includes("tasek") ||
-        question.includes("buntong") ||
-        question.includes("jelapang") ||
-        question.includes("sebastian") || question.includes("municipal") 
-    ) {
+if (
+    question === "hi" ||
+    question === "hello" ||
+    question === "hey" ||
+    question.includes("good morning") ||
+    question.includes("good afternoon") ||
+    question.includes("good evening")
+) {
 
-        answer =
-        "SUNDAY MASSES\n\n" +
-
-        "7.00 am (Tamil)\n" +
-        "9.00 am (English)\n" +
-        "11.00 am (Bahasa - 4th Sunday)\n" +
-        "6.00 pm (Tamil - In chapels)\n\n" +
-
-        "Chapel of St. Sebastian, Municipal - 1st Sunday\n" +
-        "Chapel of St. Francis of Assisi, Tasek - 2nd Sunday\n" +
-        "Chapel of St. Annai Velanganny, Jelapang - 3rd Sunday\n" +
-        "Chapel of Christ the King, Buntong Tiga - 4th Sunday\n\n" +
-
-        "Weekdays Masses may change from time to time. " +
-        "Please refer to the parish bulletin on the Parish News site.";
-    }
+    answer =
+    "👋 Hello dear! Good day!.\n\n" +
+    "How can I help you today?";
+}
 
 
-    /* PARISH NEWS */
+/* MASS */
 
-    else if (
-        question.includes("parish news") ||
-        question.includes("parish activities")
-    ) {
+else if (
+    question.includes("mass") ||
+    question.includes("mass schedule") ||
+    question.includes("mass timing") ||
+    question.includes("what time is mass") ||
+    question.includes("when is mass") ||
+    question.includes("sunday mass") ||
+    question.includes("mass hours hour") ||
+    question.includes("mass timetable") ||
+    question.includes("bulletin parish") ||
+    question.includes("wekend masses") ||
+    question.includes("av chapels") ||
+    question.includes("chapels") ||
+    question.includes("chapel") ||
+    question.includes("av") ||
+    question.includes("ctk") ||
+    question.includes("tasek") ||
+    question.includes("buntong") ||
+    question.includes("jelapang") ||
+    question.includes("sebastian") ||
+    question.includes("municipal")
+) {
 
-        answer =
-        "Please click below link\n\n" +
+    answer =
+    "SUNDAY MASSES\n\n" +
 
-        "https://sites.google.com/d/1omjNmDoo0bs_V0dnaIGaYZ3L7RjohZ-I/p/1mcxGvd4Flnq2dhK7Yl3QN0XbwwrN86le/edit\n\n" +
+    "7.00 am (Tamil)\n" +
+    "9.00 am (English)\n" +
+    "11.00 am (Bahasa - 4th Sunday)\n" +
+    "6.00 pm (Tamil - In chapels)\n\n" +
 
-        "Parish activities\n" +
-        "Social engagement.";
-    }
+    "Chapel of St. Sebastian, Municipal - 1st Sunday\n" +
+    "Chapel of St. Francis of Assisi, Tasek - 2nd Sunday\n" +
+    "Chapel of St. Annai Velanganny, Jelapang - 3rd Sunday\n" +
+    "Chapel of Christ the King, Buntong Tiga - 4th Sunday\n\n" +
 
-
-    /* CONTACT */
-
-    else if (
-        question.includes("contact") ||
-        question.includes("phone") ||
-        question.includes("number") ||
-        question.includes("email")
-    ) {
-
-        answer =
-        "You can contact the parish office during office hours\n\n" +
-
-        "Tel 055279349\n" +
-
-        "Email lourdes.ipoh@pgdiocese.org.";
-    }
+    "Weekdays Masses may change from time to time. " +
+    "Please refer to the parish bulletin on the Parish News site.";
+}
 
 
-    /* LOCATION */
+/* PARISH NEWS */
 
-    else if (
-        question.includes("address") ||
-        question.includes("location")
-    ) {
+else if (
+    question.includes("parish news") ||
+    question.includes("parish activities")
+) {
 
-        answer =
-        "Our parish is located in Ipoh\n\n" +
+    answer =
+    "Please click below link\n\n" +
 
-        "Address 45, Jalan Silibin, Taman Lim, 30100 Ipoh, Perak.";
-    }
+    "https://sites.google.com/d/1omjNmDoo0bs_V0dnaIGaYZ3L7RjohZ-I/p/1mcxGvd4Flnq2dhK7Yl3QN0XbwwrN86le/edit\n\n" +
+
+    "Parish activities\n" +
+    "Social engagement.";
+}
+
+
+/* CONTACT */
+
+else if (
+    question.includes("contact") ||
+    question.includes("phone") ||
+    question.includes("number") ||
+    question.includes("email")
+) {
+
+    answer =
+    "You can contact the parish office during office hours\n\n" +
+
+    "Tel 055279349\n\n" +
+
+    "Email lourdes.ipoh@pgdiocese.org.";
+}
+
+
+/* LOCATION */
+
+else if (
+    question.includes("address") ||
+    question.includes("location")
+) {
+
+    answer =
+    "Our parish is located in Ipoh\n\n" +
+
+    "Address 45, Jalan Silibin, Taman Lim, 30100 Ipoh, Perak.";
+}
+
+
+/* PRIEST */
+
+else if (
+    question.includes("parish priest") ||
+    question.includes("priest") ||
+    question.includes("fr") ||
+    question.includes("current father")
+) {
+
+    answer =
+    "Meet Our Current Parish Priests 🙏⛪\n\n" +
+    "Parish priest : Rev Fr Robert Daniel\n" +
+    "Asst Priest Rev Fr George.";
+}
+
+
+/* HISTORY */
+
+else if (
+    question.includes("history") ||
+    question.includes("church history") ||
+    question.includes("sejarah") ||
+    question.includes("olol history")
+) {
+
+    answer =
+    "I love to tell history, here we go ⛪\n\n" +
+
+    "Our Lady of Lourdes, Ipoh, A Journey Through History\n\n" +
+
+    "🌿 The Beginnings of Our Parish\n\n" +
+
+    "The story of the Church of Our Lady of Lourdes, Ipoh, began during the early years of Ipoh's growth as a centre of the tin-mining industry.\n\n" +
+
+    "In 1905, the parish was founded by Father Émile Marie Henri Sausseau of the Paris Foreign Missions Society. The mission was established primarily to serve the growing Indian railway workers and Tamil-speaking Catholic community who had settled in Ipoh during this period.\n\n" +
+
+    "The first place of worship was a small wooden chapel with an attap roof, believed to have been built around 1901. As the Catholic community continued to grow, a larger wooden church was constructed in 1905 to accommodate the increasing number of faithful.\n\n" +
+
+    "🏛️ The Present Church\n\n" +
+
+    "The present Gothic-style brick church was completed in 1959, marking an important chapter in the parish's history. Its completion also commemorated the centenary of the Marian apparitions at Lourdes in 1858.\n\n" +
+
+    "Among the church's distinctive features is its outdoor grotto, which recreates the Lourdes shrine and provides a peaceful place for prayer and devotion.\n\n" +
+
+    "Another remarkable treasure is the church's unique stained-glass masterpiece created by Brother Joseph McNally, regarded as a one-of-a-kind work of its kind.\n\n" +
+
+    "🙏 A Living Heritage\n\n" +
+
+    "Today, the Church of Our Lady of Lourdes, Ipoh, stands not only as a place of worship but also as a living heritage of faith, community, and missionary history.\n\n" +
+
+    "For more than a century, the parish has witnessed the growth and transformation of Ipoh while continuing to serve generations of Catholics. Its rich missionary heritage, beautiful architecture, treasured religious artefacts, and enduring Catholic community make it an important part of the Catholic heritage of Perak.\n\n" +
+
+    "From its humble beginnings as a small wooden chapel to the beautiful church that stands today, the story of Our Lady of Lourdes, Ipoh, is a story of faith that continues to live on. 🙏⛪.";
+}
+
+
+/* THE APOSTLES CREED */
+
+else if (
+    question.includes("nicene creed") ||
+    question.includes("i believe prayer") ||
+    question.includes("i believe")
+) {
+
+    answer =
+    "I believe in God the Father almighty,\n" +
+    "Creator of heaven and earth.\n\n" +
+
+    "And in Jesus Christ, His only Son, our Lord,\n" +
+    "Who was conceived by the Holy Spirit,\n" +
+    "born of the Virgin Mary,\n" +
+    "suffered under Pontius Pilate,\n" +
+    "was crucified, died, and was buried.\n" +
+    "He descended into hell; the third day\n" +
+    "He rose again from the dead;\n" +
+    "He ascended into heaven, and sits at\n" +
+    "the right hand of God the Father almighty,\n" +
+    "from thence He shall come to judge\n" +
+    "the living and the dead.\n\n" +
+
+    "I believe in the Holy Spirit,\n" +
+    "the holy Catholic Church,\n" +
+    "the communion of saints,\n" +
+    "the forgiveness of sins,\n" +
+    "the resurrection of the body\n" +
+    "and life everlasting.\n\n" +
+
+    "Amen.";
+}
+
+
+/* OUR FATHER PRAYER */
+
+else if (
+    question.includes("our father") ||
+    question.includes("lords prayer")
+) {
+
+    answer =
+    "Our Father who art in heaven,\n" +
+    "hallowed be thy name.\n" +
+    "Thy kingdom come.\n" +
+    "Thy will be done\n" +
+    "on earth as it is in heaven.\n" +
+    "Give us this day our daily bread,\n" +
+    "and forgive us our trespasses,\n" +
+    "as we forgive those who trespass against us,\n" +
+    "and lead us not into temptation,\n" +
+    "but deliver us from evil.\n" +
+    "For thine is the kingdom and the power, and the glory,\n" +
+    "forever and ever.\n\n" +
+
+    "Amen.";
+}
+
+
+/* HAIL MARY */
+
+else if (
+    question.includes("hail mary") ||
+    question.includes("hail mary prayer") ||
+    question.includes("latin hail mary")
+) {
+
+    answer =
+    "🙏 Hail Mary\n\n" +
+
+    "Hail Mary, full of grace,\n" +
+    "The Lord is with thee.\n" +
+    "Blessed art thou among women,\n" +
+    "And blessed is the fruit of thy womb, Jesus.\n" +
+    "Holy Mary, Mother of God,\n" +
+    "Pray for us sinners,\n" +
+    "Now and at the hour of our death.\n\n" +
+
+    "Amen!\n\n" +
+
+    "🙏 Hail Mary in Latin\n\n" +
+
+    "Ave Maria, gratia plena,\n" +
+    "Dominus tecum,\n" +
+    "benedicta tu in mulieribus,\n" +
+    "et benedictus fructus ventris tui Iesus.\n" +
+    "Sancta Maria mater Dei,\n" +
+    "ora pro nobis peccatoribus,\n" +
+    "nunc, et in hora mortis nostrae.";
+}
+
+
+/* SAINT MICHAEL */
+
+else if (
+    question.includes("saint michael") ||
+    question.includes("saint michael prayer") ||
+    question.includes("st michael") ||
+    question.includes("st michael prayer") ||
+    question.includes("st michael prayers")
+) {
+
+    answer =
+    "🙏 Saint Michael the Archangel\n\n" +
+
+    "Saint Michael the Archangel,\n" +
+    "defend us in battle,\n" +
+    "be our protection against the wickedness and snares of the devil;\n" +
+    "may God rebuke him, we humbly pray;\n" +
+    "and do thou, O Prince of the heavenly host,\n" +
+    "by the power of God, cast into hell\n" +
+    "Satan and all the evil spirits\n" +
+    "who prowl through the world seeking the ruin of souls.\n\n" +
+
+    "Amen.";
+}
+
+
+/* HOW TO PRAY THE ROSARY */
+
+else if (
+    question.includes("how to pray the rosary") ||
+    question.includes("pray the rosary") ||
+    question.includes("rosary steps") ||
+    question.includes("how to pray rosary") ||
+    question.includes("rosary prayer") ||
+    question.includes("rosary")
+) {
+
+    answer =
+    "🙏 HOW TO PRAY THE ROSARY\n\n" +
+
+    "STEP 1 — SIGN OF THE CROSS\n\n" +
+    "Begin with the Sign of the Cross:\n" +
+    "\"In the name of the Father, and of the Son, and of the Holy Spirit. Amen.\"\n\n" +
+
+    "STEP 2 — APOSTLES' CREED\n\n" +
+    "Pray the Apostles' Creed.\n\n" +
+
+    "STEP 3 — OUR FATHER\n\n" +
+    "Pray one Our Father on the first large bead.\n\n" +
+
+    "STEP 4 — THREE HAIL MARYS\n\n" +
+    "Pray three Hail Marys on the three small beads, traditionally for an increase in faith, hope and charity.\n\n" +
+
+    "STEP 5 — GLORY BE\n\n" +
+    "Pray the Glory Be.\n\n" +
+
+    "STEP 6 — ANNOUNCE THE FIRST MYSTERY\n\n" +
+    "Announce the first mystery and take a moment to meditate on it.\n\n" +
+
+    "STEP 7 — OUR FATHER\n\n" +
+    "Pray one Our Father on the large bead.\n\n" +
+
+    "STEP 8 — TEN HAIL MARYS\n\n" +
+    "Pray ten Hail Marys while meditating on the mystery.\n\n" +
+
+    "STEP 9 — GLORY BE\n\n" +
+    "After the ten Hail Marys, pray the Glory Be.\n\n" +
+
+    "STEP 10 — FATIMA PRAYER\n\n" +
+    "O my Jesus, forgive us our sins, save us from the fires of hell, " +
+    "lead all souls to heaven, especially those most in need of thy mercy. Amen.\n\n" +
+
+    "STEP 11 — REPEAT FOR ALL FIVE DECADES\n\n" +
+    "Repeat Steps 6–10 for each of the five decades, announcing a new mystery for each decade.\n\n" +
+
+    "STEP 12 — HAIL HOLY QUEEN\n\n" +
+    "After the fifth decade, pray the Hail Holy Queen.\n\n" +
+
+    "STEP 13 — CLOSING PRAYER\n\n" +
+    "O God, whose only-begotten Son, by his life, death, and resurrection, " +
+    "has purchased for us the rewards of eternal life; grant, we beseech thee, " +
+    "that meditating upon these mysteries of the most holy Rosary of the Blessed " +
+    "Virgin Mary, we may imitate what they contain and obtain what they promise, " +
+    "through the same Christ our Lord. Amen.";
+}
+
+
+/* CONFESSION STEPS */
+
+else if (
+    question.includes("confession") ||
+    question.includes("confession steps") ||
+    question.includes("act of contrition")
+) {
+
+    answer =
+    "🙏 HOW TO GO TO CONFESSION\n\n" +
+
+    "STEP 1 — THE GREETING\n\n" +
+
+    "The priest will welcome you. Make the Sign of the Cross and say:\n\n" +
+
+    "\"Bless me, Father, for I have sinned. It has been [mention how long—weeks, months, or years] since my last confession.\"\n\n" +
+
+    "If you don't remember how long it has been, simply say:\n" +
+    "\"It has been a very long time.\"\n\n" +
+
+    "The priest will guide you.\n\n" +
+
+    "STEP 2 — STATING YOUR SINS\n\n" +
+
+    "Be clear and honest. You don't need to tell a long story or provide excuses. " +
+    "Simply state your sins.\n\n" +
+
+    "\"These are my sins…\"\n\n" +
+
+    "When you are finished, say:\n" +
+    "\"For these and all the sins of my past life, I am truly sorry.\"\n\n" +
+
+    "STEP 3 — LISTEN TO THE PRIEST\n\n" +
+
+    "The priest may offer some brief spiritual advice. He will then give you a penance, " +
+    "usually prayers or a small act of kindness, to help you begin your amendment.\n\n" +
+
+    "STEP 4 — ACT OF CONTRITION\n\n" +
+
+    "After giving you a penance, the priest will ask you to express your sorrow by praying " +
+    "the Act of Contrition.\n\n" +
+
+    "ACT OF CONTRITION\n\n" +
+
+    "O my God, I am heartily sorry for having offended Thee, and I detest all my sins " +
+    "because of thy just punishments, but most of all because.";
+}
+
+
+/* SEPTEMBER 2026 CALENDAR */
+
+else if (
+    question.includes("september") ||
+    question.includes("september calendar") ||
+    question.includes("september liturgical calendar") ||
+    question.includes("september saints") ||
+    question.includes("liturgical calendar") ||
+    question.includes("calendar")
+) {
+
+    answer =
+    "📅 SEPTEMBER 2026 — LITURGICAL CALENDAR\n\n" +
+
+    "Sep 1 — Tuesday, 22nd week in Ordinary Time\n\n" +
+    "Sep 2 — Wednesday, 22nd week in Ordinary Time\n\n" +
+    "Sep 3 — Saint Gregory the Great, Pope and Doctor\n\n" +
+    "Sep 4 — Friday, 22nd week in Ordinary Time\n\n" +
+    "Sep 5 — Saint Teresa of Calcutta, Virgin\n\n" +
+    "Sep 6 — 23rd Sunday in Ordinary Time\n\n" +
+    "Sep 7 — Monday, 23rd week in Ordinary Time\n\n" +
+    "Sep 8 — Birth of the Blessed Virgin Mary\n\n" +
+    "Sep 9 — Saint Peter Claver, Priest\n\n" +
+    "Sep 10 — Thursday, 23rd week in Ordinary Time\n\n" +
+    "Sep 11 — Friday, 23rd week in Ordinary Time\n\n" +
+    "Sep 12 — Holy Name of the Blessed Virgin Mary\n\n" +
+    "Sep 13 — 24th Sunday in Ordinary Time\n\n" +
+    "Sep 14 — Triumph of the Holy Cross\n\n" +
+    "Sep 15 — Our Lady of Sorrows\n\n" +
+    "Sep 16 — Saints Cornelius, Pope, and Cyprian, Bishop, Martyrs\n\n" +
+    "Sep 17 — Saint Hildegard of Bingen, Virgin and Doctor of the Church\n\n" +
+    "Sep 18 — Friday, 24th week in Ordinary Time\n\n" +
+    "Sep 19 — Saint Januarius, Bishop and Martyr\n\n" +
+    "Sep 20 — 25th Sunday in Ordinary Time\n\n" +
+    "Sep 21 — Saint Matthew the Evangelist, Apostle and Evangelist\n\n" +
+    "Sep 22 — Tuesday, 25th week in Ordinary Time\n\n" +
+    "Sep 23 — Saint Pio of Pietrelcina (Padre Pio), Priest\n\n" +
+    "Sep 24 — Thursday, 25th week in Ordinary Time\n\n" +
+    "Sep 25 — Friday, 25th week in Ordinary Time\n\n" +
+    "Sep 26 — Saints Cosmas and Damian, Martyrs\n\n" +
+    "Sep 27 — 26th Sunday in Ordinary Time\n\n" +
+    "Sep 28 — Saint Wenceslaus, Martyr\n\n" +
+    "Sep 29 — Saints Michael, Gabriel and Raphael, Archangels\n\n" +
+    "Sep 30 — Saint Jerome, Priest and Doctor";
+}
 
 
     typeAnswer(answer);
@@ -391,15 +758,44 @@ function showAnswer(topic) {
     }
 
 
-    /* LOCATION */
+    /* CALENDAR */
 
-    else if (topic === "location") {
+    else if (topic === "calendar") {
 
         typeAnswer(
 
-            "Our parish is located in Ipoh\n\n" +
+            "📅 SEPTEMBER 2026 — LITURGICAL CALENDAR\n\n" +
 
-            "Address 45, Jalan Silibin, Taman Lim, 30100 Ipoh, Perak."
+            "Sep 1 — Tuesday, 22nd week in Ordinary Time\n\n" +
+            "Sep 2 — Wednesday, 22nd week in Ordinary Time\n\n" +
+            "Sep 3 — Saint Gregory the Great, Pope and Doctor\n\n" +
+            "Sep 4 — Friday, 22nd week in Ordinary Time\n\n" +
+            "Sep 5 — Saint Teresa of Calcutta, Virgin\n\n" +
+            "Sep 6 — 23rd Sunday in Ordinary Time\n\n" +
+            "Sep 7 — Monday, 23rd week in Ordinary Time\n\n" +
+            "Sep 8 — Birth of the Blessed Virgin Mary\n\n" +
+            "Sep 9 — Saint Peter Claver, Priest\n\n" +
+            "Sep 10 — Thursday, 23rd week in Ordinary Time\n\n" +
+            "Sep 11 — Friday, 23rd week in Ordinary Time\n\n" +
+            "Sep 12 — Holy Name of the Blessed Virgin Mary\n\n" +
+            "Sep 13 — 24th Sunday in Ordinary Time\n\n" +
+            "Sep 14 — Triumph of the Holy Cross\n\n" +
+            "Sep 15 — Our Lady of Sorrows\n\n" +
+            "Sep 16 — Saints Cornelius, Pope, and Cyprian, Bishop, Martyrs\n\n" +
+            "Sep 17 — Saint Hildegard of Bingen, Virgin and Doctor of the Church\n\n" +
+            "Sep 18 — Friday, 24th week in Ordinary Time\n\n" +
+            "Sep 19 — Saint Januarius, Bishop and Martyr\n\n" +
+            "Sep 20 — 25th Sunday in Ordinary Time\n\n" +
+            "Sep 21 — Saint Matthew the Evangelist, Apostle and Evangelist\n\n" +
+            "Sep 22 — Tuesday, 25th week in Ordinary Time\n\n" +
+            "Sep 23 — Saint Pio of Pietrelcina (Padre Pio), Priest\n\n" +
+            "Sep 24 — Thursday, 25th week in Ordinary Time\n\n" +
+            "Sep 25 — Friday, 25th week in Ordinary Time\n\n" +
+            "Sep 26 — Saints Cosmas and Damian, Martyrs\n\n" +
+            "Sep 27 — 26th Sunday in Ordinary Time\n\n" +
+            "Sep 28 — Saint Wenceslaus, Martyr\n\n" +
+            "Sep 29 — Saints Michael, Gabriel and Raphael, Archangels\n\n" +
+            "Sep 30 — Saint Jerome, Priest and Doctor"
 
         );
 
