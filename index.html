@@ -100,24 +100,20 @@ input::placeholder {
     white-space: pre-line;
     line-height: 1.6;
 }
-
-/* Mobile */
-@media (max-width: 600px) {
-
-    .chat-container {
-        margin: 20px 10px;
-        padding: 15px;
-    }
-
-    .question-area {
-        flex-direction: column;
-    }
-
-    input {
-        width: auto;
-    }
+/* Daily Gospel */
+#daily-gospel {
+    width: 260px;
+    max-height: 300px;
+    margin: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.70);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    color: white;
+    box-sizing: border-box;
+    line-height: 1.4;
+    overflow-y: auto;
 }
-
     </style>
 
 </head>
@@ -383,7 +379,7 @@ else if (
     question.includes("history") ||
     question.includes("church history") ||
     question.includes("sejarah") ||
-    question.includes("olol history")
+    question.includes("olol history") || question.includes("our lady of lourdes history")
 ) {
 
     answer =
@@ -804,6 +800,78 @@ function showAnswer(topic) {
 }
 
 </script>
+<script>
+    let today = new Date();
 
-</body>
+    let year = today.getFullYear();
+    let month = String(today.getMonth() + 1).padStart(2, "0");
+    let day = String(today.getDate()).padStart(2, "0");
+
+    let todayDate = year + "-" + month + "-" + day;
+
+    console.log("Today's date is:", todayDate);
+</script>
+<div id="daily-gospel">
+    <h2>📖 Daily Gospel</h2>
+    <p id="gospel-text">Loading today's Gospel...</p>
+</div>
+<script>
+    const dailyMessages = {
+        "2026-08-25": {
+            message: "Jesus reminds us that true faith is not only about outward religious practices. We are called to live with justice, mercy and faithfulness, allowing God to transform our hearts.",
+            prayer: "Lord Jesus, help me to live my faith sincerely. Give me a heart that chooses mercy, justice and faithfulness. Guide me to follow You each day. Amen."
+        },
+
+        "2026-08-26": {
+            message: "Jesus warns us against hypocrisy and reminds us that what is inside our hearts matters more than how we appear to others. God desires sincerity and a heart that is truly devoted to Him.",
+            prayer: "Lord Jesus, purify my heart and help me to live honestly and humbly. May my actions always reflect the faith I profess. Amen."
+        },
+
+        "2026-08-27": {
+            message: "Jesus calls us to remain watchful and faithful. We do not know when He will come, so each day is an opportunity to serve God faithfully and care for those around us.",
+            prayer: "Lord Jesus, keep my heart awake and ready for You. Help me to serve faithfully, love others and make good use of every day You give me. Amen."
+        },
+
+        "2026-08-28": {
+            message: "Jesus teaches us through the parable of the wise and foolish bridesmaids to remain prepared and keep the light of faith alive. Our relationship with God requires daily faithfulness and love.",
+            prayer: "Lord Jesus, keep the light of faith burning in my heart. Help me remain faithful, prepared and generous in loving You and serving others. Amen."
+        },
+
+        "2026-08-29": {
+            message: "John the Baptist remained faithful to God's truth even when it brought suffering. His example calls us to stand firmly for what is right and remain faithful to Christ.",
+            prayer: "Lord Jesus, give me the courage of John the Baptist to stand for truth and what is right. Strengthen my faith when following You becomes difficult. Amen."
+        }
+    };
+
+    fetch("https://cpbjr.github.io/catholic-readings-api/readings/" + year + "/" + month + "-" + day + ".json")
+        .then(response => response.json())
+        .then(data => {
+
+            let gospel = data.readings.gospel;
+
+            let readingLink = "https://www.vaticannews.va/en/word-of-the-day/" +
+                year + "/" + month + "/" + day + ".html";
+
+            let todayMessage = dailyMessages[todayDate];
+
+            document.getElementById("gospel-text").innerHTML =
+                "📖 <strong>" + gospel + "</strong><br><br>" +
+
+                "<strong>📝 Today's Message</strong><br>" +
+                todayMessage.message +
+                "<br><br>" +
+
+                "<strong>🙏 Today's Prayer</strong><br>" +
+                todayMessage.prayer +
+                "<br><br>" +
+
+                "<a href='" + readingLink + "' target='_blank'>" +
+                "📖 Read the Full Reading</a>";
+        })
+        .catch(error => {
+            console.log("Gospel loading error:", error);
+            document.getElementById("gospel-text").innerHTML =
+                "Unable to load today's Gospel.";
+        });
+</script></body>
 </html>
