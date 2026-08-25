@@ -56,15 +56,34 @@ button:hover {
     background: rgba(255, 255, 255, 0.2);
 }
 
+/* Gospel reference */
+#gospel-reference {
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
 /* Question area */
 .question-area {
     display: flex;
+    width: 100%;
     gap: 8px;
-    margin-top: 20px;
+    margin-top: 10px;
+    box-sizing: border-box;
 }
 
-input {
+/* Question input */
+.question-area input {
     flex: 1;
+    min-width: 0;
+    box-sizing: border-box;
     background: rgba(0, 0, 0, 0.65);
     color: white;
     border: 1px solid white;
@@ -73,8 +92,13 @@ input {
     font-size: 15px;
 }
 
-input::placeholder {
+.question-area input::placeholder {
     color: white;
+}
+
+/* Ask button */
+.question-area button {
+    flex-shrink: 0;
 }
 
 /* AI answer box */
@@ -100,20 +124,37 @@ input::placeholder {
     white-space: pre-line;
     line-height: 1.6;
 }
-/* Daily Gospel */
-#daily-gospel {
-    width: 260px;
-    max-height: 300px;
-    margin: 20px;
-    padding: 15px;
-    background: rgba(0, 0, 0, 0.70);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    border-radius: 12px;
+
+/* Vatican link */
+.vatican-link {
     color: white;
-    box-sizing: border-box;
-    line-height: 1.4;
-    overflow-y: auto;
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
 }
+
+/* Mobile layout */
+@media (max-width: 600px) {
+
+    .chat-container {
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    .question-area {
+        width: 100%;
+    }
+
+    .question-area input {
+        width: 100%;
+    }
+
+}
+
     </style>
 
 </head>
@@ -138,8 +179,8 @@ input::placeholder {
             Activities
         </button>
 
-        <button onclick="showAnswer('contact')">
-            Contact
+        <button onclick="showAnswer('gospel')">
+            📖 Daily Gospel
         </button>
 
         <button onclick="showAnswer('calendar')">
@@ -148,6 +189,10 @@ input::placeholder {
 
     </div>
 
+    <!-- GOSPEL REFERENCE -->
+    <div id="gospel-reference"></div>
+
+    <!-- QUESTION AREA -->
     <div class="question-area">
 
         <input
@@ -162,9 +207,7 @@ input::placeholder {
 
     </div>
 
-
     <!-- AI ANSWER BOX -->
-
     <div id="answer-box">
 
         <div class="ai-title">
@@ -184,7 +227,6 @@ input::placeholder {
 
 /* =========================
    AI TYPING EFFECT
-   FIXED — PREVENTS SCRAMBLED TEXT
 ========================= */
 
 let typingInterval = null;
@@ -194,7 +236,6 @@ function typeAnswer(answer) {
 
     let answerBox = document.getElementById("answer");
 
-    /* STOP ANY PREVIOUS TYPING */
     if (typingInterval !== null) {
         clearInterval(typingInterval);
         typingInterval = null;
@@ -205,7 +246,7 @@ function typeAnswer(answer) {
         typingTimeout = null;
     }
 
-    answerBox.textContent = "🤖 AI is typing...";
+    answerBox.innerHTML = "🤖 AI is typing...";
 
     typingTimeout = setTimeout(function() {
 
@@ -223,6 +264,23 @@ function typeAnswer(answer) {
 
                 clearInterval(typingInterval);
                 typingInterval = null;
+
+                if (answer.includes("VATICAN_LINK:")) {
+
+                    let parts = answer.split("VATICAN_LINK:");
+
+                    let textBefore = parts[0];
+                    let link = parts[1].trim();
+
+                    answerBox.innerHTML =
+                        textBefore.replace(/\n/g, "<br>") +
+                        "<br><br>" +
+                        "<a class='vatican-link' href='" +
+                        link +
+                        "' target='_blank'>" +
+                        "🔗 Read the Full Reading on Vatican News" +
+                        "</a>";
+                }
 
             }
 
@@ -379,7 +437,8 @@ else if (
     question.includes("history") ||
     question.includes("church history") ||
     question.includes("sejarah") ||
-    question.includes("olol history") || question.includes("our lady of lourdes history")
+    question.includes("olol history") ||
+    question.includes("our lady of lourdes history")
 ) {
 
     answer =
@@ -699,9 +758,6 @@ else if (
 
 function showAnswer(topic) {
 
-
-    /* MASS */
-
     if (topic === "mass") {
 
         typeAnswer(
@@ -727,9 +783,6 @@ function showAnswer(topic) {
 
     }
 
-
-    /* ACTIVITIES */
-
     else if (topic === "activities") {
 
         typeAnswer(
@@ -740,21 +793,11 @@ function showAnswer(topic) {
 
     }
 
+    else if (topic === "gospel") {
 
-    /* CONTACT */
-
-    else if (topic === "contact") {
-
-        typeAnswer(
-
-            "You can contact the parish office during office hours."
-
-        );
+        loadDailyGospel();
 
     }
-
-
-    /* CALENDAR */
 
     else if (topic === "calendar") {
 
@@ -799,8 +842,13 @@ function showAnswer(topic) {
 
 }
 
-</script>
-<script>
+
+/* =========================
+   DAILY GOSPEL
+========================= */
+
+function loadDailyGospel() {
+
     let today = new Date();
 
     let year = today.getFullYear();
@@ -809,14 +857,9 @@ function showAnswer(topic) {
 
     let todayDate = year + "-" + month + "-" + day;
 
-    console.log("Today's date is:", todayDate);
-</script>
-<div id="daily-gospel">
-    <h2>📖 Daily Gospel</h2>
-    <p id="gospel-text">Loading today's Gospel...</p>
-</div>
-<script>
+
     const dailyMessages = {
+
         "2026-08-25": {
             message: "Jesus reminds us that true faith is not only about outward religious practices. We are called to live with justice, mercy and faithfulness, allowing God to transform our hearts.",
             prayer: "Lord Jesus, help me to live my faith sincerely. Give me a heart that chooses mercy, justice and faithfulness. Guide me to follow You each day. Amen."
@@ -841,37 +884,90 @@ function showAnswer(topic) {
             message: "John the Baptist remained faithful to God's truth even when it brought suffering. His example calls us to stand firmly for what is right and remain faithful to Christ.",
             prayer: "Lord Jesus, give me the courage of John the Baptist to stand for truth and what is right. Strengthen my faith when following You becomes difficult. Amen."
         }
+
     };
 
+
+    typeAnswer("📖 Loading today's Gospel...");
+
+
     fetch("https://cpbjr.github.io/catholic-readings-api/readings/" + year + "/" + month + "-" + day + ".json")
-        .then(response => response.json())
-        .then(data => {
+    .then(response => response.json())
+    .then(data => {
 
-            let gospel = data.readings.gospel;
+        let firstReading = data.readings.firstReading;
+        let psalm = data.readings.psalm;
+        let secondReading = data.readings.secondReading;
+        let gospel = data.readings.gospel;
 
-            let readingLink = "https://www.vaticannews.va/en/word-of-the-day/" +
-                year + "/" + month + "/" + day + ".html";
+        /* GOSPEL REFERENCE */
+        let gospelReference = "Matthew 23:23-26";
 
-            let todayMessage = dailyMessages[todayDate];
+        let readingLink =
+            "https://www.vaticannews.va/en/word-of-the-day/" +
+            year + "/" + month + "/" + day + ".html";
 
-            document.getElementById("gospel-text").innerHTML =
-                "📖 <strong>" + gospel + "</strong><br><br>" +
+        let todayMessage = dailyMessages[todayDate];
 
-                "<strong>📝 Today's Message</strong><br>" +
-                todayMessage.message +
-                "<br><br>" +
+        if (!todayMessage) {
+            todayMessage = {
+                message: "Today's message will be updated soon.",
+                prayer: "Lord Jesus, guide us and strengthen our faith each day. Amen."
+            };
+        }
 
-                "<strong>🙏 Today's Prayer</strong><br>" +
-                todayMessage.prayer +
-                "<br><br>" +
+        let fullAnswer =
 
-                "<a href='" + readingLink + "' target='_blank'>" +
-                "📖 Read the Full Reading</a>";
-        })
-        .catch(error => {
-            console.log("Gospel loading error:", error);
-            document.getElementById("gospel-text").innerHTML =
-                "Unable to load today's Gospel.";
-        });
-</script></body>
+            "📖 FIRST READING\n\n" +
+            firstReading + "\n\n" +
+
+            "🎵 RESPONSORIAL PSALM\n\n" +
+            psalm + "\n\n" +
+
+            (secondReading
+                ? "📖 SECOND READING\n\n" +
+                  secondReading + "\n\n"
+                : "") +
+
+            "✝️ GOSPEL\n\n" +
+            gospel + "\n\n" +
+
+            "📝 TODAY'S MESSAGE\n\n" +
+            todayMessage.message + "\n\n" +
+
+            "🙏 TODAY'S PRAYER\n\n" +
+            todayMessage.prayer + "\n\n" +
+
+            "VATICAN_LINK:" +
+            readingLink;
+
+        /* SHOW REFERENCE ON LEFT */
+        document.getElementById("gospel-reference").textContent =
+            gospelReference;
+
+        typeAnswer(fullAnswer);
+
+    })
+
+    .catch(error => {
+
+        console.log("Gospel loading error:", error);
+
+        document.getElementById("gospel-reference").textContent =
+            "Matthew 23:23-26";
+
+        typeAnswer(
+            "📖 DAILY READINGS\n\n" +
+            "Unable to load today's readings at the moment.\n\n" +
+            "Please try again shortly."
+        );
+
+    });
+
+}
+
+</script>
+
+
+</body>
 </html>
