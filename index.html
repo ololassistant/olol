@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,6 +12,7 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: fixed;
     color: white;
     font-family: Arial, sans-serif;
 }
@@ -55,20 +55,6 @@ button {
 
 button:hover {
     background: rgba(255, 255, 255, 0.2);
-}
-
-/* Gospel reference */
-#gospel-reference {
-    color: black;
-    font-size: 18px;
-    font-weight: bold;
-    text-align: left;
-    margin-top: 15px;
-    margin-bottom: 10px;
-    padding: 0;
-    background: transparent;
-    border: none;
-    box-shadow: none;
 }
 
 /* Prayer Library */
@@ -207,9 +193,6 @@ button:hover {
         </button>
 
     </div>
-
-    <!-- GOSPEL REFERENCE -->
-    <div id="gospel-reference"></div>
 
     <!-- PRAYER LIBRARY -->
     <div id="prayer-library" style="display: none;">
@@ -745,8 +728,6 @@ function showAnswer(topic) {
 
     if (topic === "mass") {
 
-        document.getElementById("gospel-reference").textContent = "";
-
         typeAnswer(
             "SUNDAY MASSES\n\n" +
             "7.00 am (Tamil)\n" +
@@ -769,8 +750,6 @@ function showAnswer(topic) {
 
     else if (topic === "activities") {
 
-        document.getElementById("gospel-reference").textContent = "";
-
         typeAnswer(
             "Our parish activities include youth activities, catechism, prayer sessions and other parish programs."
         );
@@ -790,8 +769,6 @@ function showAnswer(topic) {
     /* CALENDAR */
 
     else if (topic === "calendar") {
-
-        document.getElementById("gospel-reference").textContent = "";
 
         typeAnswer(
             "📅 SEPTEMBER 2026 — LITURGICAL CALENDAR\n\n" +
@@ -846,9 +823,6 @@ function showPrayerLibrary() {
     /* Hide individual prayer back button */
     document.getElementById("prayer-back").style.display = "none";
 
-    /* Clear gospel reference */
-    document.getElementById("gospel-reference").textContent = "";
-
     typeAnswer(
         "🙏 PRAYER LIBRARY\n\n" +
         "Please choose a prayer."
@@ -867,9 +841,6 @@ function showPrayer(prayer) {
 
     /* Show back to prayer library */
     document.getElementById("prayer-back").style.display = "block";
-
-    /* Clear gospel reference */
-    document.getElementById("gospel-reference").textContent = "";
 
 
     /* OUR FATHER */
@@ -950,9 +921,6 @@ function backToPrayerLibrary() {
     /* Keep main menu hidden */
     document.querySelector(".quick-buttons").style.display = "none";
 
-    /* Clear gospel reference */
-    document.getElementById("gospel-reference").textContent = "";
-
     typeAnswer(
         "🙏 PRAYER LIBRARY\n\n" +
         "Please choose a prayer."
@@ -974,9 +942,6 @@ function backToMainMenu() {
 
     /* Hide prayer back button */
     document.getElementById("prayer-back").style.display = "none";
-
-    /* Clear gospel reference */
-    document.getElementById("gospel-reference").textContent = "";
 
     typeAnswer(
         "Ask me something about the parish."
@@ -1050,11 +1015,6 @@ function loadDailyGospel() {
         let gospel = data.readings.gospel;
 
 
-        /* GOSPEL REFERENCE */
-
-        let gospelReference = "Matthew 23:23-26";
-
-
         let readingLink =
             "https://www.vaticannews.va/en/word-of-the-day/" +
             year + "/" +
@@ -1106,12 +1066,6 @@ function loadDailyGospel() {
             readingLink;
 
 
-        /* SHOW REFERENCE */
-
-        document.getElementById("gospel-reference").textContent =
-            gospelReference;
-
-
         typeAnswer(fullAnswer);
 
     })
@@ -1120,11 +1074,6 @@ function loadDailyGospel() {
     .catch(error => {
 
         console.log("Gospel loading error:", error);
-
-
-        document.getElementById("gospel-reference").textContent =
-            "Matthew 23:23-26";
-
 
         typeAnswer(
 
@@ -1144,4 +1093,3 @@ function loadDailyGospel() {
 
 </body>
 </html>
-```
