@@ -1,0 +1,2293 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to Our Lady of Lourdes</title>
+
+    <style>
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-image: url("church.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+/* Main chat area */
+.chat-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 25px;
+}
+
+/* Title */
+h1 {
+    text-align: center;
+    color: white;
+}
+
+/* Greeting */
+#greeting {
+    text-align: center;
+    color: white;
+    font-size: 18px;
+}
+
+/* Quick buttons */
+.quick-buttons {
+    text-align: center;
+    margin: 20px 0;
+}
+
+button {
+    background: rgba(0, 0, 0, 0.65);
+    color: white;
+    border: 1px solid white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* =========================
+   PRAYER LIBRARY
+========================= */
+
+#prayer-library {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#prayer-library h2 {
+    color: white;
+}
+
+.prayer-category-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+/* Category buttons */
+
+.prayer-category-button {
+    display: inline-block;
+    width: auto;
+    margin: 5px;
+    padding: 10px 15px;
+    font-size: 15px;
+}
+
+/* Category menus */
+
+#daily-prayer-menu,
+#common-prayer-menu {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#daily-prayer-menu h2,
+#common-prayer-menu h2 {
+    color: white;
+}
+
+/* =========================
+   REAL BOOK
+========================= */
+
+#prayer-book-viewer {
+    display: none;
+    margin-top: 25px;
+    text-align: center;
+}
+
+.book-wrapper {
+    width: 100%;
+    max-width: 650px;
+    margin: 0 auto;
+    perspective: 1800px;
+}
+
+/* Book itself */
+
+.prayer-book {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    min-height: 500px;
+    transform-style: preserve-3d;
+}
+
+/* Book page */
+
+.book-page {
+    position: absolute;
+    left: 3%;
+    top: 0;
+    width: 94%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            to right,
+            rgba(0,0,0,0.12),
+            transparent 8%,
+            transparent 92%,
+            rgba(0,0,0,0.10)
+        ),
+        #f5ead1;
+
+    color: #30271d;
+
+    border-radius: 5px 12px 12px 5px;
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,0.45),
+        inset 8px 0 12px rgba(0,0,0,0.12),
+        inset -5px 0 8px rgba(0,0,0,0.08);
+
+    border-left: 3px solid rgba(90,60,30,0.35);
+
+    transform-origin: left center;
+
+    transform-style: preserve-3d;
+
+    overflow: hidden;
+
+    z-index: 5;
+
+    touch-action: pan-y;
+}
+
+/* Page content */
+
+.book-page-content {
+    height: 100%;
+    box-sizing: border-box;
+    padding: 30px 35px;
+
+    overflow-y: auto;
+
+    text-align: left;
+
+    white-space: pre-line;
+
+    line-height: 1.7;
+
+    font-size: 15px;
+}
+
+/* Page heading */
+
+.book-page-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+
+    margin-bottom: 20px;
+
+    color: #392a1b;
+}
+
+/* Page number */
+
+.book-page-number {
+    text-align: center;
+    margin-top: 8px;
+    font-size: 13px;
+    color: white;
+}
+
+/* Swipe hint */
+
+.prayer-swipe-hint {
+    display: none;
+    font-size: 11px;
+    opacity: 0.65;
+    margin-top: 8px;
+    letter-spacing: 0.3px;
+}
+
+/* Book spine effect */
+
+.book-spine {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 100%;
+
+    background: rgba(70,45,25,0.45);
+
+    z-index: 20;
+
+    pointer-events: none;
+
+    border-radius: 5px 0 0 5px;
+}
+
+/* Paper edges */
+
+.book-page::after {
+    content: "";
+    position: absolute;
+
+    right: 5px;
+    top: 12px;
+    bottom: 12px;
+
+    width: 3px;
+
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(90,60,30,0.18) 0px,
+        rgba(90,60,30,0.18) 1px,
+        transparent 1px,
+        transparent 4px
+    );
+
+    pointer-events: none;
+}
+
+/* =========================
+   PAGE TURN ANIMATION
+========================= */
+
+.book-page.turn-next {
+    animation: turnNext 0.9s ease-in-out forwards;
+}
+
+@keyframes turnNext {
+
+    0% {
+        transform: rotateY(0deg);
+        box-shadow:
+            0 8px 20px rgba(0,0,0,0.45);
+    }
+
+    25% {
+        transform: rotateY(-55deg);
+        box-shadow:
+            -15px 8px 25px rgba(0,0,0,0.35);
+    }
+
+    50% {
+        transform: rotateY(-100deg);
+        box-shadow:
+            -25px 8px 30px rgba(0,0,0,0.25);
+    }
+
+    75% {
+        transform: rotateY(-145deg);
+        box-shadow:
+            -15px 8px 25px rgba(0,0,0,0.18);
+    }
+
+    100% {
+        transform: rotateY(-180deg);
+        box-shadow:
+            0 8px 20px rgba(0,0,0,0);
+    }
+}
+
+.book-page.turn-previous {
+    animation: turnPrevious 0.9s ease-in-out forwards;
+}
+
+@keyframes turnPrevious {
+
+    0% {
+        transform: rotateY(-180deg);
+    }
+
+    25% {
+        transform: rotateY(-125deg);
+    }
+
+    50% {
+        transform: rotateY(-80deg);
+    }
+
+    75% {
+        transform: rotateY(-35deg);
+    }
+
+    100% {
+        transform: rotateY(0deg);
+    }
+}
+
+/* Page shadow during flip */
+
+.book-page.flipping {
+    pointer-events: none;
+}
+
+/* Book controls */
+
+.book-controls {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.book-controls button {
+    min-width: 110px;
+}
+
+/* Book category button */
+
+.book-back-button {
+    margin-top: 10px;
+}
+
+/* =========================
+   QUESTION AREA
+========================= */
+
+.question-area {
+    display: flex;
+    width: 100%;
+    max-width: 700px;
+    margin: 10px auto;
+    gap: 8px;
+    box-sizing: border-box;
+}
+
+/* Question input */
+
+.question-area input {
+    flex: 1;
+    min-width: 0;
+    box-sizing: border-box;
+
+    background: rgba(0, 0, 0, 0.65);
+
+    color: white;
+
+    border: 1px solid white;
+
+    padding: 12px;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+}
+
+.question-area input::placeholder {
+    color: white;
+}
+
+/* Ask button */
+
+.question-area button {
+    flex-shrink: 0;
+}
+
+/* =========================
+   AI ANSWER BOX
+========================= */
+
+#answer-box {
+    margin-top: 25px;
+
+    background: rgba(0,0,0,0.70);
+
+    border: 1px solid rgba(255,255,255,0.25);
+
+    border-radius: 15px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,0.4);
+}
+
+/* AI name */
+
+.ai-title {
+    font-weight: bold;
+    font-size: 17px;
+    margin-bottom: 12px;
+}
+
+/* AI answer */
+
+#answer {
+    color: white;
+    white-space: pre-line;
+    line-height: 1.6;
+
+    max-height: 350px;
+
+    overflow-y: auto;
+}
+
+/* Vatican link */
+
+.vatican-link {
+    color: white;
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    .chat-container {
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    .question-area {
+        width: 100%;
+    }
+
+    .question-area input {
+        width: 100%;
+    }
+
+    .prayer-book {
+        height: 520px;
+        min-height: 520px;
+    }
+
+    .book-page-content {
+        padding: 25px 22px;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .book-page-title {
+        font-size: 20px;
+    }
+
+}
+
+/* =========================
+   SWIPE MESSAGE
+   TOUCH DEVICES ONLY
+========================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+    .prayer-swipe-hint {
+        display: block;
+    }
+
+}
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="chat-container">
+
+    <h1>Welcome to Our Lady of Lourdes</h1>
+
+    <p id="greeting">
+        👋 Hello! Welcome. How can I help you?
+    </p>
+
+
+    <!-- =========================
+         QUICK BUTTONS
+    ========================= -->
+
+    <div class="quick-buttons">
+
+        <button onclick="showAnswer('mass')">
+            Mass Times
+        </button>
+
+        <button onclick="showPrayerLibrary()">
+            🙏 Prayer Library
+        </button>
+
+        <button onclick="showAnswer('gospel')">
+            📖 Daily Gospel
+        </button>
+
+        <button onclick="showAnswer('calendar')">
+            📅 Calendar
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         PRAYER LIBRARY
+    ========================= -->
+
+    <div id="prayer-library" style="display: none;">
+
+        <h2>🙏 Prayer Library</h2>
+
+        <button
+            class="prayer-category-button"
+            onclick="openPrayerCategory('daily')">
+            📖 Daily Prayers
+        </button>
+
+        <button
+            class="prayer-category-button"
+            onclick="openPrayerCategory('common')">
+            🙏 Common Prayers
+        </button>
+
+        <br>
+
+        <button onclick="backToMainMenu()">
+            ← Back
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         DAILY PRAYER MENU
+    ========================= -->
+
+    <div id="daily-prayer-menu" style="display: none;">
+
+        <h2>📖 Daily Prayers</h2>
+
+        <button
+            class="prayer-category-button"
+            onclick="openPrayerBook('daily', 0)">
+            🌅 Morning Prayer
+        </button>
+
+        <button
+            class="prayer-category-button"
+            onclick="openPrayerBook('daily', 1)">
+            ☀️ Afternoon Prayer
+        </button>
+
+        <button
+            class="prayer-category-button"
+            onclick="openPrayerBook('daily', 2)">
+            🌙 Prayer at Night
+        </button>
+
+        <br>
+
+        <button onclick="backToPrayerCategories()">
+            ← Back to Prayer Library
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         COMMON PRAYER MENU
+    ========================= -->
+
+    <div id="common-prayer-menu" style="display: none;">
+
+        <h2>🙏 Common Prayers</h2>
+
+        <button
+            class="prayer-category-button"
+            onclick="openPrayerBook('common', 0)">
+            🌹 Hail Mary
+        </button>
+
+        <button
+            class="prayer-category-button"
+            onclick="openPrayerBook('common', 1)">
+            🙏 Our Father
+        </button>
+
+        <button
+            class="prayer-category-button"
+            onclick="openPrayerBook('common', 2)">
+            🛡️ St. Michael
+        </button>
+
+        <button
+            class="prayer-category-button"
+            onclick="openPrayerBook('common', 3)">
+            ❤️ Act of Contrition
+        </button>
+
+        <button
+            class="prayer-category-button"
+            onclick="openPrayerBook('common', 4)">
+            ✝️ Apostles Creed
+        </button>
+
+        <button
+            class="prayer-category-button"
+            onclick="openPrayerBook('common', 5)">
+            ✝️ Nicene Creed
+        </button>
+
+        <button
+            class="prayer-category-button"
+            onclick="openPrayerBook('common', 6)">
+            🍽️ Prayer Before Meals
+        </button>
+
+        <br>
+
+        <button onclick="backToPrayerCategories()">
+            ← Back to Prayer Library
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         BOOK VIEWER
+    ========================= -->
+
+    <div id="prayer-book-viewer">
+
+        <div class="book-wrapper">
+
+            <div class="prayer-book">
+
+                <div class="book-spine"></div>
+
+                <div id="book-page" class="book-page">
+
+                    <div
+                        id="book-page-content"
+                        class="book-page-content">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div
+            id="book-page-number"
+            class="book-page-number">
+        </div>
+
+        <div class="prayer-swipe-hint">
+            Swipe to turn page
+        </div>
+
+        <div class="book-controls">
+
+            <button onclick="previousPrayer()">
+                ← Previous
+            </button>
+
+            <button onclick="nextPrayer()">
+                Next →
+            </button>
+
+            <br>
+
+            <button
+                class="book-back-button"
+                onclick="backToPrayerCategory()">
+                ← Back
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         QUESTION AREA
+    ========================= -->
+
+    <div class="question-area">
+
+        <input
+            type="text"
+            id="question"
+            placeholder="Type your question"
+        >
+
+        <button onclick="answerQuestion()">
+            Ask
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         AI ANSWER BOX
+    ========================= -->
+
+    <div id="answer-box">
+
+        <div class="ai-title">
+            🤖 Parish Assistant
+        </div>
+
+        <div id="answer">
+            Ask me something about the parish.
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   AI TYPING EFFECT
+========================= */
+
+let typingInterval = null;
+let typingTimeout = null;
+
+function typeAnswer(answer) {
+
+    let answerBox = document.getElementById("answer");
+
+    if (typingInterval !== null) {
+        clearInterval(typingInterval);
+        typingInterval = null;
+    }
+
+    if (typingTimeout !== null) {
+        clearTimeout(typingTimeout);
+        typingTimeout = null;
+    }
+
+    answerBox.innerHTML = "🤖 AI is typing...";
+
+    typingTimeout = setTimeout(function() {
+
+        answerBox.textContent = "";
+
+        let i = 0;
+
+        let autoScroll = true;
+
+        answerBox.onscroll = function() {
+
+            let distanceFromBottom =
+                answerBox.scrollHeight -
+                answerBox.scrollTop -
+                answerBox.clientHeight;
+
+            if (distanceFromBottom > 20) {
+                autoScroll = false;
+            } else {
+                autoScroll = true;
+            }
+
+        };
+
+        typingInterval = setInterval(function() {
+
+            answerBox.textContent += answer.charAt(i);
+
+            i++;
+
+            if (autoScroll) {
+                answerBox.scrollTop =
+                    answerBox.scrollHeight;
+            }
+
+            if (i >= answer.length) {
+
+                clearInterval(typingInterval);
+                typingInterval = null;
+
+                if (answer.includes("VATICAN_LINK:")) {
+
+                    let parts =
+                        answer.split("VATICAN_LINK:");
+
+                    let textBefore = parts[0];
+
+                    let link = parts[1].trim();
+
+                    answerBox.innerHTML =
+                        textBefore.replace(/\n/g, "<br>") +
+                        "<br><br>" +
+                        "<a class='vatican-link' href='" +
+                        link +
+                        "' target='_blank'>" +
+                        "🔗 Read the Full Reading on Vatican News" +
+                        "</a>";
+
+                    if (autoScroll) {
+                        answerBox.scrollTop =
+                            answerBox.scrollHeight;
+                    }
+                }
+
+            }
+
+        }, 25);
+
+    }, 800);
+}
+
+
+/* =========================
+   ASK QUESTION
+========================= */
+
+function answerQuestion() {
+
+    let question =
+        document.getElementById("question")
+        .value
+        .toLowerCase()
+        .trim();
+
+    let answer =
+        "Sorry, I don't have an answer for that question.";
+
+
+    /* GREETING */
+
+    if (
+        question === "hi" ||
+        question === "hello" ||
+        question === "hey" ||
+        question.includes("good morning") ||
+        question.includes("good afternoon") ||
+        question.includes("good evening")
+    ) {
+
+        answer =
+        "👋 Hello dear! Good day!.\n\n" +
+        "How can I help you today?";
+    }
+
+
+    /* MASS */
+
+    else if (
+        question.includes("mass") ||
+        question.includes("mass schedule") ||
+        question.includes("mass timing") ||
+        question.includes("what time is mass") ||
+        question.includes("when is mass") ||
+        question.includes("sunday mass") ||
+        question.includes("mass hours hour") ||
+        question.includes("mass timetable") ||
+        question.includes("bulletin parish") ||
+        question.includes("wekend masses") ||
+        question.includes("av chapels") ||
+        question.includes("chapels") ||
+        question.includes("chapel") ||
+        question.includes("av") ||
+        question.includes("ctk") ||
+        question.includes("tasek") ||
+        question.includes("buntong") ||
+        question.includes("jelapang") ||
+        question.includes("sebastian") ||
+        question.includes("municipal")
+    ) {
+
+        answer =
+        "SUNDAY MASSES\n\n" +
+        "7.00 am (Tamil)\n" +
+        "9.00 am (English)\n" +
+        "11.00 am (Bahasa - 4th Sunday)\n" +
+        "6.00 pm (Tamil - In chapels)\n\n" +
+        "Chapel of St. Sebastian, Municipal - 1st Sunday\n" +
+        "Chapel of St. Francis of Assisi, Tasek - 2nd Sunday\n" +
+        "Chapel of St. Annai Velanganny, Jelapang - 3rd Sunday\n" +
+        "Chapel of Christ the King, Buntong Tiga - 4th Sunday\n\n" +
+        "Weekdays Masses may change from time to time. " +
+        "Please refer to the parish bulletin on the Parish News site.";
+    }
+
+
+    /* PARISH NEWS */
+
+    else if (
+        question.includes("parish news") ||
+        question.includes("parish activities")
+    ) {
+
+        answer =
+        "Please click below link\n\n" +
+        "https://sites.google.com/d/1omjNmDoo0bs_V0dnaIGaYZ3L7RjohZ-I/p/1mcxGvd4Flnq2dhK7Yl3QN0XbwwrN86le/edit\n\n" +
+        "Parish activities\n" +
+        "Social engagement.";
+    }
+
+
+    /* CONTACT */
+
+    else if (
+        question.includes("contact") ||
+        question.includes("phone") ||
+        question.includes("number") ||
+        question.includes("email")
+    ) {
+
+        answer =
+        "You can contact the parish office during office hours\n\n" +
+        "Tel 055279349\n\n" +
+        "Email lourdes.ipoh@pgdiocese.org.";
+    }
+
+
+    /* LOCATION */
+
+    else if (
+        question.includes("address") ||
+        question.includes("location")
+    ) {
+
+        answer =
+        "Our parish is located in Ipoh\n\n" +
+        "Address 45, Jalan Silibin, Taman Lim, 30100 Ipoh, Perak.";
+    }
+
+
+    /* PRIEST */
+
+    else if (
+        question.includes("parish priest") ||
+        question.includes("priest") ||
+        question.includes("fr") ||
+        question.includes("current father")
+    ) {
+
+        answer =
+        "Meet Our Current Parish Priests 🙏⛪\n\n" +
+        "Parish priest : Rev Fr Robert Daniel\n" +
+        "Asst Priest Rev Fr George.";
+    }
+
+
+    /* HISTORY */
+
+    else if (
+        question.includes("history") ||
+        question.includes("church history") ||
+        question.includes("sejarah") ||
+        question.includes("olol history") ||
+        question.includes("our lady of lourdes history")
+    ) {
+
+        answer =
+        "I love to tell history, here we go ⛪\n\n" +
+        "Our Lady of Lourdes, Ipoh, A Journey Through History\n\n" +
+        "🌿 The Beginnings of Our Parish\n\n" +
+        "The story of the Church of Our Lady of Lourdes, Ipoh, began during the early years of Ipoh's growth as a centre of the tin-mining industry.\n\n" +
+        "In 1905, the parish was founded by Father Émile Marie Henri Sausseau of the Paris Foreign Missions Society. The mission was established primarily to serve the growing Indian railway workers and Tamil-speaking Catholic community who had settled in Ipoh during this period.\n\n" +
+        "The first place of worship was a small wooden chapel with an attap roof, believed to have been built around 1901. As the Catholic community continued to grow, a larger wooden church was constructed in 1905 to accommodate the increasing number of faithful.\n\n" +
+        "🏛️ The Present Church\n\n" +
+        "The present Gothic-style brick church was completed in 1959, marking an important chapter in the parish's history. Its completion also commemorated the centenary of the Marian apparitions at Lourdes in 1858.\n\n" +
+        "Among the church's distinctive features is its outdoor grotto, which recreates the Lourdes shrine and provides a peaceful place for prayer and devotion.\n\n" +
+        "Another remarkable treasure is the church's unique stained-glass masterpiece created by Brother Joseph McNally, regarded as a one-of-a-kind work of its kind.\n\n" +
+        "🙏 A Living Heritage\n\n" +
+        "Today, the Church of Our Lady of Lourdes, Ipoh, stands not only as a place of worship but also as a living heritage of faith, community, and missionary history.\n\n" +
+        "For more than a century, the parish has witnessed the growth and transformation of Ipoh while continuing to serve generations of Catholics. Its rich missionary heritage, beautiful architecture, treasured religious artefacts, and enduring Catholic community make it an important part of the Catholic heritage of Perak.\n\n" +
+        "From its humble beginnings as a small wooden chapel to the beautiful church that stands today, the story of Our Lady of Lourdes, Ipoh, is a story of faith that continues to live on. 🙏⛪";
+    }
+
+
+    /* THE APOSTLES CREED */
+
+    else if (
+        question.includes("nicene creed") ||
+        question.includes("i believe prayer") ||
+        question.includes("i believe")
+    ) {
+
+        answer =
+        "I believe in God the Father almighty,\n" +
+        "Creator of heaven and earth.\n\n" +
+        "And in Jesus Christ, His only Son, our Lord,\n" +
+        "Who was conceived by the Holy Spirit,\n" +
+        "born of the Virgin Mary,\n" +
+        "suffered under Pontius Pilate,\n" +
+        "was crucified, died, and was buried.\n" +
+        "He descended into hell; the third day\n" +
+        "He rose again from the dead;\n" +
+        "He ascended into heaven, and sits at\n" +
+        "the right hand of God the Father almighty,\n" +
+        "from thence He shall come to judge\n" +
+        "the living and the dead.\n\n" +
+        "I believe in the Holy Spirit,\n" +
+        "the holy Catholic Church,\n" +
+        "the communion of saints,\n" +
+        "the forgiveness of sins,\n" +
+        "the resurrection of the body\n" +
+        "and life everlasting.\n\n" +
+        "Amen.";
+    }
+
+
+    /* OUR FATHER */
+
+    else if (
+        question.includes("our father") ||
+        question.includes("lords prayer")
+    ) {
+
+        answer =
+        "Our Father who art in heaven,\n" +
+        "hallowed be thy name.\n" +
+        "Thy kingdom come.\n" +
+        "Thy will be done\n" +
+        "on earth as it is in heaven.\n" +
+        "Give us this day our daily bread,\n" +
+        "and forgive us our trespasses,\n" +
+        "as we forgive those who trespass against us,\n" +
+        "and lead us not into temptation,\n" +
+        "but deliver us from evil.\n" +
+        "For thine is the kingdom and the power, and the glory,\n" +
+        "forever and ever.\n\n" +
+        "Amen.";
+    }
+
+
+    /* HAIL MARY */
+
+    else if (
+        question.includes("hail mary") ||
+        question.includes("hail mary prayer") ||
+        question.includes("latin hail mary")
+    ) {
+
+        answer =
+        "🙏 Hail Mary\n\n" +
+        "Hail Mary, full of grace,\n" +
+        "The Lord is with thee.\n" +
+        "Blessed art thou among women,\n" +
+        "And blessed is the fruit of thy womb, Jesus.\n" +
+        "Holy Mary, Mother of God,\n" +
+        "Pray for us sinners,\n" +
+        "Now and at the hour of our death.\n\n" +
+        "Amen!\n\n" +
+        "🙏 Hail Mary in Latin\n\n" +
+        "Ave Maria, gratia plena,\n" +
+        "Dominus tecum,\n" +
+        "benedicta tu in mulieribus,\n" +
+        "et benedictus fructus ventris tui Iesus.\n" +
+        "Sancta Maria mater Dei,\n" +
+        "ora pro nobis peccatoribus,\n" +
+        "nunc, et in hora mortis nostrae.";
+    }
+
+
+    /* SAINT MICHAEL */
+
+    else if (
+        question.includes("saint michael") ||
+        question.includes("saint michael prayer") ||
+        question.includes("st michael") ||
+        question.includes("st michael prayer") ||
+        question.includes("st michael prayers")
+    ) {
+
+        answer =
+        "🙏 Saint Michael the Archangel\n\n" +
+        "Saint Michael the Archangel,\n" +
+        "defend us in battle,\n" +
+        "be our protection against the wickedness and snares of the devil;\n" +
+        "may God rebuke him, we humbly pray;\n" +
+        "and do thou, O Prince of the heavenly host,\n" +
+        "by the power of God, cast into hell\n" +
+        "Satan and all the evil spirits\n" +
+        "who prowl through the world seeking the ruin of souls.\n\n" +
+        "Amen.";
+    }
+
+
+    /* HOW TO PRAY THE ROSARY */
+
+    else if (
+        question.includes("how to pray the rosary") ||
+        question.includes("pray the rosary") ||
+        question.includes("rosary steps") ||
+        question.includes("how to pray rosary") ||
+        question.includes("rosary prayer") ||
+        question.includes("rosary")
+    ) {
+
+        answer =
+        "🙏 HOW TO PRAY THE ROSARY\n\n" +
+        "STEP 1 — SIGN OF THE CROSS\n\n" +
+        "Begin with the Sign of the Cross:\n" +
+        "\"In the name of the Father, and of the Son, and of the Holy Spirit. Amen.\"\n\n" +
+        "STEP 2 — APOSTLES' CREED\n\n" +
+        "Pray the Apostles' Creed.\n\n" +
+        "STEP 3 — OUR FATHER\n\n" +
+        "Pray one Our Father on the first large bead.\n\n" +
+        "STEP 4 — THREE HAIL MARYS\n\n" +
+        "Pray three Hail Marys on the three small beads, traditionally for an increase in faith, hope and charity.\n\n" +
+        "STEP 5 — GLORY BE\n\n" +
+        "Pray the Glory Be.\n\n" +
+        "STEP 6 — ANNOUNCE THE FIRST MYSTERY\n\n" +
+        "Announce the first mystery and take a moment to meditate on it.\n\n" +
+        "STEP 7 — OUR FATHER\n\n" +
+        "Pray one Our Father on the large bead.\n\n" +
+        "STEP 8 — TEN HAIL MARYS\n\n" +
+        "Pray ten Hail Marys while meditating on the mystery.\n\n" +
+        "STEP 9 — GLORY BE\n\n" +
+        "After the ten Hail Marys, pray the Glory Be.\n\n" +
+        "STEP 10 — FATIMA PRAYER\n\n" +
+        "O my Jesus, forgive us our sins, save us from the fires of hell, " +
+        "lead all souls to heaven, especially those most in need of thy mercy. Amen.\n\n" +
+        "STEP 11 — REPEAT FOR ALL FIVE DECADES\n\n" +
+        "Repeat Steps 6–10 for each of the five decades, announcing a new mystery for each decade.\n\n" +
+        "STEP 12 — HAIL HOLY QUEEN\n\n" +
+        "After the fifth decade, pray the Hail Holy Queen.\n\n" +
+        "STEP 13 — CLOSING PRAYER\n\n" +
+        "O God, whose only-begotten Son, by his life, death, and resurrection, " +
+        "has purchased for us the rewards of eternal life; grant, we beseech thee, " +
+        "that meditating upon these mysteries of the most holy Rosary of the Blessed " +
+        "Virgin Mary, we may imitate what they contain and obtain what they promise, " +
+        "through the same Christ our Lord. Amen.";
+    }
+
+
+    /* CONFESSION */
+
+    else if (
+        question.includes("confession") ||
+        question.includes("confession steps") ||
+        question.includes("act of contrition")
+    ) {
+
+        answer =
+        "🙏 HOW TO GO TO CONFESSION\n\n" +
+        "STEP 1 — THE GREETING\n\n" +
+        "The priest will welcome you. Make the Sign of the Cross and say:\n\n" +
+        "\"Bless me, Father, for I have sinned. It has been [mention how long—weeks, months, or years] since my last confession.\"\n\n" +
+        "If you don't remember how long it has been, simply say:\n" +
+        "\"It has been a very long time.\"\n\n" +
+        "The priest will guide you.\n\n" +
+        "STEP 2 — STATING YOUR SINS\n\n" +
+        "Be clear and honest. You don't need to tell a long story or provide excuses. " +
+        "Simply state your sins.\n\n" +
+        "\"These are my sins…\"\n\n" +
+        "When you are finished, say:\n" +
+        "\"For these and all the sins of my past life, I am truly sorry.\"\n\n" +
+        "STEP 3 — LISTEN TO THE PRIEST\n\n" +
+        "The priest may offer some brief spiritual advice. He will then give you a penance, " +
+        "usually prayers or a small act of kindness, to help you begin your amendment.\n\n" +
+        "STEP 4 — ACT OF CONTRITION\n\n" +
+        "After giving you a penance, the priest will ask you to express your sorrow by praying " +
+        "the Act of Contrition.\n\n" +
+        "ACT OF CONTRITION\n\n" +
+        "O my God, I am heartily sorry for having offended Thee, and I detest all my sins " +
+        "because of thy just punishments, but most of all because.";
+    }
+
+
+    /* SEPTEMBER 2026 CALENDAR */
+
+    else if (
+        question.includes("september") ||
+        question.includes("september calendar") ||
+        question.includes("september liturgical calendar") ||
+        question.includes("september saints") ||
+        question.includes("liturgical calendar") ||
+        question.includes("calendar")
+    ) {
+
+        answer =
+        "📅 SEPTEMBER 2026 — LITURGICAL CALENDAR\n\n" +
+        "Sep 1 — Tuesday, 22nd week in Ordinary Time\n\n" +
+        "Sep 2 — Wednesday, 22nd week in Ordinary Time\n\n" +
+        "Sep 3 — Saint Gregory the Great, Pope and Doctor\n\n" +
+        "Sep 4 — Friday, 22nd week in Ordinary Time\n\n" +
+        "Sep 5 — Saint Teresa of Calcutta, Virgin\n\n" +
+        "Sep 6 — 23rd Sunday in Ordinary Time\n\n" +
+        "Sep 7 — Monday, 23rd week in Ordinary Time\n\n" +
+        "Sep 8 — Birth of the Blessed Virgin Mary\n\n" +
+        "Sep 9 — Saint Peter Claver, Priest\n\n" +
+        "Sep 10 — Thursday, 23rd week in Ordinary Time\n\n" +
+        "Sep 11 — Friday, 23rd week in Ordinary Time\n\n" +
+        "Sep 12 — Holy Name of the Blessed Virgin Mary\n\n" +
+        "Sep 13 — 24th Sunday in Ordinary Time\n\n" +
+        "Sep 14 — Triumph of the Holy Cross\n\n" +
+        "Sep 15 — Our Lady of Sorrows\n\n" +
+        "Sep 16 — Saints Cornelius, Pope, and Cyprian, Bishop, Martyrs\n\n" +
+        "Sep 17 — Saint Hildegard of Bingen, Virgin and Doctor of the Church\n\n" +
+        "Sep 18 — Friday, 24th week in Ordinary Time\n\n" +
+        "Sep 19 — Saint Januarius, Bishop and Martyr\n\n" +
+        "Sep 20 — 25th Sunday in Ordinary Time\n\n" +
+        "Sep 21 — Saint Matthew the Evangelist, Apostle and Evangelist\n\n" +
+        "Sep 22 — Tuesday, 25th week in Ordinary Time\n\n" +
+        "Sep 23 — Saint Pio of Pietrelcina (Padre Pio), Priest\n\n" +
+        "Sep 24 — Thursday, 25th week in Ordinary Time\n\n" +
+        "Sep 25 — Friday, 25th week in Ordinary Time\n\n" +
+        "Sep 26 — Saints Cosmas and Damian, Martyrs\n\n" +
+        "Sep 27 — 26th Sunday in Ordinary Time\n\n" +
+        "Sep 28 — Saint Wenceslaus, Martyr\n\n" +
+        "Sep 29 — Saints Michael, Gabriel and Raphael, Archangels\n\n" +
+        "Sep 30 — Saint Jerome, Priest and Doctor";
+    }
+
+    typeAnswer(answer);
+}
+
+
+/* =========================
+   QUICK BUTTONS
+========================= */
+
+function showAnswer(topic) {
+
+    document.querySelector(".quick-buttons").style.display = "block";
+
+    document.getElementById("prayer-library").style.display = "none";
+
+    document.getElementById("daily-prayer-menu").style.display = "none";
+
+    document.getElementById("common-prayer-menu").style.display = "none";
+
+    document.getElementById("prayer-book-viewer").style.display = "none";
+
+    /* RESTORE AI CHAT */
+
+    document.querySelector(".question-area").style.display = "flex";
+
+    document.getElementById("answer-box").style.display = "block";
+
+
+    /* MASS */
+
+    if (topic === "mass") {
+
+        typeAnswer(
+            "SUNDAY MASSES\n\n" +
+            "7.00 am (Tamil)\n" +
+            "9.00 am (English)\n" +
+            "11.00 am (Bahasa - 4th Sunday)\n" +
+            "6.00 pm (Tamil - In chapels)\n\n" +
+            "CHAPELS\n\n" +
+            "Chapel of St. Sebastian, Municipal - 1st Sunday\n" +
+            "Chapel of St. Francis of Assisi, Tasek - 2nd Sunday\n" +
+            "Chapel of St. Annai Velanganny, Jelapang - 3rd Sunday\n" +
+            "Chapel of Christ the King, Buntong Tiga - 4th Sunday\n\n" +
+            "Weekend Masses may change from time to time. " +
+            "Please refer to the parish bulletin on the Parish News site."
+        );
+
+    }
+
+
+    /* ACTIVITIES */
+
+    else if (topic === "activities") {
+
+        typeAnswer(
+            "Our parish activities include youth activities, catechism, prayer sessions and other parish programs."
+        );
+
+    }
+
+
+    /* GOSPEL */
+
+    else if (topic === "gospel") {
+
+        loadDailyGospel();
+
+    }
+
+
+    /* CALENDAR */
+
+    else if (topic === "calendar") {
+
+        typeAnswer(
+            "📅 SEPTEMBER 2026 — LITURGICAL CALENDAR\n\n" +
+            "Sep 1 — Tuesday, 22nd week in Ordinary Time\n\n" +
+            "Sep 2 — Wednesday, 22nd week in Ordinary Time\n\n" +
+            "Sep 3 — Saint Gregory the Great, Pope and Doctor\n\n" +
+            "Sep 4 — Friday, 22nd week in Ordinary Time\n\n" +
+            "Sep 5 — Saint Teresa of Calcutta, Virgin\n\n" +
+            "Sep 6 — 23rd Sunday in Ordinary Time\n\n" +
+            "Sep 7 — Monday, 23rd week in Ordinary Time\n\n" +
+            "Sep 8 — Birth of the Blessed Virgin Mary\n\n" +
+            "Sep 9 — Saint Peter Claver, Priest\n\n" +
+            "Sep 10 — Thursday, 23rd week in Ordinary Time\n\n" +
+            "Sep 11 — Friday, 23rd week in Ordinary Time\n\n" +
+            "Sep 12 — Holy Name of the Blessed Virgin Mary\n\n" +
+            "Sep 13 — 24th Sunday in Ordinary Time\n\n" +
+            "Sep 14 — Triumph of the Holy Cross\n\n" +
+            "Sep 15 — Our Lady of Sorrows\n\n" +
+            "Sep 16 — Saints Cornelius, Pope, and Cyprian, Bishop, Martyrs\n\n" +
+            "Sep 17 — Saint Hildegard of Bingen, Virgin and Doctor of the Church\n\n" +
+            "Sep 18 — Friday, 24th week in Ordinary Time\n\n" +
+            "Sep 19 — Saint Januarius, Bishop and Martyr\n\n" +
+            "Sep 20 — 25th Sunday in Ordinary Time\n\n" +
+            "Sep 21 — Saint Matthew the Evangelist, Apostle and Evangelist\n\n" +
+            "Sep 22 — Tuesday, 25th week in Ordinary Time\n\n" +
+            "Sep 23 — Saint Pio of Pietrelcina (Padre Pio), Priest\n\n" +
+            "Sep 24 — Thursday, 25th week in Ordinary Time\n\n" +
+            "Sep 25 — Friday, 25th week in Ordinary Time\n\n" +
+            "Sep 26 — Saints Cosmas and Damian, Martyrs\n\n" +
+            "Sep 27 — 26th Sunday in Ordinary Time\n\n" +
+            "Sep 28 — Saint Wenceslaus, Martyr\n\n" +
+            "Sep 29 — Saints Michael, Gabriel and Raphael, Archangels\n\n" +
+            "Sep 30 — Saint Jerome, Priest and Doctor"
+        );
+    }
+
+}
+
+
+/* =========================
+   PRAYER LIBRARY
+========================= */
+
+function showPrayerLibrary() {
+
+    document.querySelector(".quick-buttons").style.display = "none";
+
+    document.getElementById("prayer-library").style.display = "block";
+
+    document.getElementById("daily-prayer-menu").style.display = "none";
+
+    document.getElementById("common-prayer-menu").style.display = "none";
+
+    document.getElementById("prayer-book-viewer").style.display = "none";
+
+    /* HIDE AI CHAT INSIDE PRAYER LIBRARY */
+
+    document.querySelector(".question-area").style.display = "none";
+
+    document.getElementById("answer-box").style.display = "none";
+
+}
+
+
+/* =========================
+   PRAYER DATA
+========================= */
+
+const prayerCollections = {
+
+    daily: [
+
+        {
+            title: "🌅 MORNING PRAYER",
+
+            text: `O Jesus,
+
+through the Immaculate Heart of Mary,
+
+I offer You my prayers, works,
+
+joys and sufferings
+
+of this day for all the intentions
+
+of Your Sacred Heart,
+
+in union with the Holy Sacrifice of the Mass
+
+throughout the world,
+
+in reparation for my sins,
+
+for the intentions of all my relatives and friends,
+
+and in particular
+
+for the intentions of the Holy Father.
+
+Amen.`
+        },
+
+
+        {
+            title: "☀️ AFTERNOON PRAYER",
+
+            text: `Most glorious God,
+
+As I pause in the midst of this day,
+
+I invite You into this moment of prayer.
+
+I ask Your pardon for any way that I have failed to love
+today.
+
+For my pride, envy, gluttony, greed, lust, sloth and anger,
+
+I beg for Your forgiveness.
+
+Once again, I dedicate this day to You.
+
+I pray for humility, kindness, temperance, charity, chastity, diligence and
+patience.
+
+Help me, Lord, to listen to Your gentle voice
+
+And to trust in Your guidance and grace.
+
+My life is Yours, dear Lord.
+
+My life is Yours.
+
+May I hold nothing back from You.
+
+May I fulfill my duties this day in accord with Your perfect will.
+
+I love You, dear Lord.
+
+I love You with all my heart.
+
+Help me to love You and others with all my might.
+
+Amen.`
+        },
+
+
+        {
+            title: "🌙 PRAYER AT NIGHT",
+
+            text: `My precious Lord,
+
+As this day comes to a close,
+
+I take this moment to turn to You.
+
+Help me, in this moment of quiet, to examine my day.
+
+(Do a brief examination of conscience.)
+
+Lord, I thank You for helping me to see my sin.
+
+Please give to me the grace of humility
+
+So that I can admit all my sin without reserve.
+
+I pray that every sin will be forgiven,
+
+And I open myself to Your grace
+
+So that Your merciful Heart will create me anew.
+
+I also call to mind the way in which You were present to me this day.
+
+(Take a moment to ponder the graces God blessed you with this day.)
+
+Lord, I thank You for the blessings of this day.
+
+Please help me to see these blessings as Your divine presence in my life.
+
+May I turn from sin and turn to You.
+
+Your presence in my life brings great joy;
+
+My sin leads to sorrow and despair.
+
+I choose You as my Lord.
+
+I choose You as my guide
+
+And pray for Your abundant blessings tomorrow.
+
+May this night be restful in You.
+
+May it be a night of renewal.
+
+Speak to me, Lord, as I sleep.
+
+Guard me and protect me the whole night through.
+
+My guardian angel, Saint Joseph, my Blessed Mother,
+
+Intercede for me now and always.
+
+Amen.`
+        }
+
+    ],
+
+
+    common: [
+
+        {
+            title: "🌹 HAIL MARY",
+
+            text: `Hail Mary, full of grace,
+
+The Lord is with thee.
+
+Blessed art thou among women,
+
+and blessed is the fruit of thy womb, Jesus.
+
+Holy Mary, Mother of God,
+
+Pray for us sinners,
+
+Now and at the hour of our death.
+
+Amen.`
+        },
+
+
+        {
+            title: "🙏 OUR FATHER",
+
+            text: `Our Father who art in heaven,
+
+hallowed be thy name.
+
+Thy kingdom come.
+
+Thy will be done
+
+on earth as it is in heaven.
+
+Give us this day our daily bread,
+
+and forgive us our trespasses,
+
+as we forgive those who trespass against us,
+
+and lead us not into temptation,
+
+but deliver us from evil.
+
+For thine is the kingdom and the power, and the glory,
+
+forever and ever.
+
+Amen.`
+        },
+
+
+        {
+            title: "🛡️ ST. MICHAEL THE ARCHANGEL",
+
+            text: `Saint Michael the Archangel,
+
+defend us in battle,
+
+be our protection against the wickedness and snares of the devil;
+
+may God rebuke him, we humbly pray;
+
+and do thou, O Prince of the heavenly host,
+
+by the power of God, cast into hell
+
+Satan and all the evil spirits
+
+who prowl through the world seeking the ruin of souls.
+
+Amen.`
+        },
+
+
+        {
+            title: "❤️ ACT OF CONTRITION",
+
+            text: `O my God, I am heartily sorry for having offended You,
+
+and I detest all my sins because of Your just punishments, but most of all
+
+because they offend You, my God, who are all-good and deserving of all my
+
+love. I firmly resolve, with the help of Your grace, to sin no more and
+
+to avoid the near occasion of sin. Amen.`
+        },
+
+
+        {
+            title: "✝️ APOSTLES CREED",
+
+            text: `I believe in God,
+
+the Father almighty,
+
+Creator of heaven and earth,
+
+and in Jesus Christ, his only Son, our Lord,
+
+who was conceived by the Holy Spirit,
+
+born of the Virgin Mary,
+
+suffered under Pontius Pilate,
+
+was crucified, died and was buried;
+
+he descended into hell;
+
+on the third day he rose again from the dead;
+
+he ascended into heaven,
+
+and is seated at the right hand of God the Father almighty;
+
+from there he will come to judge the living and the dead.
+
+I believe in the Holy Spirit,
+
+the holy catholic Church,
+
+the communion of saints,
+
+the forgiveness of sins,
+
+the resurrection of the body,
+
+and life everlasting. Amen.`
+        },
+
+
+        {
+            title: "✝️ NICENE CREED",
+
+            text: `I believe in one God,
+
+the Father almighty,
+
+maker of heaven and earth,
+
+of all things visible and invisible.
+
+I believe in one Lord Jesus Christ,
+
+the Only Begotten Son of God,
+
+born of the Father before all ages.
+
+God from God, Light from Light,
+
+true God from true God,
+
+begotten, not made, consubstantial with the Father;
+
+through him all things were made.
+
+For us men and for our salvation
+
+he came down from heaven,
+
+and by the Holy Spirit was incarnate of the Virgin Mary,
+
+and became man.
+
+For our sake he was crucified under Pontius Pilate,
+
+he suffered death and was buried,
+
+and rose again on the third day
+
+in accordance with the Scriptures.
+
+He ascended into heaven
+
+and is seated at the right hand of the Father.
+
+He will come again in glory
+
+to judge the living and the dead
+
+and his kingdom will have no end.
+
+I believe in the Holy Spirit, the Lord, the giver of life,
+
+who proceeds from the Father and the Son,
+
+who with the Father and the Son is adored and glorified,
+
+who has spoken through the prophets.
+
+I believe in one, holy, catholic and apostolic Church.
+
+I confess one Baptism for the forgiveness of sins
+
+and I look forward to the resurrection of the dead
+
+and the life of the world to come. Amen.`
+        },
+
+
+        {
+            title: "🍽️ PRAYER BEFORE MEALS",
+
+            text: `Bless us, O Lord, and these your gifts
+
+which we are about to receive from your goodness.
+
+Through Christ our Lord.
+
+Amen.`
+        }
+
+    ]
+
+};
+
+
+/* =========================
+   BOOK VARIABLES
+========================= */
+
+let currentPrayerCategory = "";
+let currentPrayerIndex = 0;
+
+let isPageTurning = false;
+
+
+/* =========================
+   OPEN CATEGORY
+========================= */
+
+function openPrayerCategory(category) {
+
+    document.getElementById("prayer-library").style.display = "none";
+
+    document.getElementById("daily-prayer-menu").style.display = "none";
+
+    document.getElementById("common-prayer-menu").style.display = "none";
+
+    document.getElementById("prayer-book-viewer").style.display = "none";
+
+
+    if (category === "daily") {
+
+        document.getElementById("daily-prayer-menu").style.display = "block";
+
+    }
+
+
+    else if (category === "common") {
+
+        document.getElementById("common-prayer-menu").style.display = "block";
+
+    }
+
+}
+
+
+/* =========================
+   OPEN BOOK
+========================= */
+
+function openPrayerBook(category, index) {
+
+    currentPrayerCategory = category;
+
+    currentPrayerIndex = index;
+
+    document.getElementById("daily-prayer-menu").style.display = "none";
+
+    document.getElementById("common-prayer-menu").style.display = "none";
+
+    document.getElementById("prayer-book-viewer").style.display = "block";
+
+    displayPrayerPage();
+
+}
+
+
+/* =========================
+   DISPLAY PAGE
+========================= */
+
+function displayPrayerPage() {
+
+    let bookPage =
+        document.getElementById("book-page");
+
+    let pageContent =
+        document.getElementById("book-page-content");
+
+    let pageNumber =
+        document.getElementById("book-page-number");
+
+    let prayer =
+        prayerCollections[currentPrayerCategory][currentPrayerIndex];
+
+
+    pageContent.innerHTML =
+        "<div class='book-page-title'>" +
+        prayer.title +
+        "</div>" +
+        prayer.text;
+
+
+    pageNumber.textContent =
+        "Page " +
+        (currentPrayerIndex + 1) +
+        " of " +
+        prayerCollections[currentPrayerCategory].length;
+
+
+    bookPage.classList.remove("turn-next");
+
+    bookPage.classList.remove("turn-previous");
+
+    bookPage.classList.remove("flipping");
+
+
+    pageContent.scrollTop = 0;
+
+}
+
+
+/* =========================
+   NEXT PAGE
+========================= */
+
+function nextPrayer() {
+
+    if (isPageTurning) {
+        return;
+    }
+
+    let pages =
+        prayerCollections[currentPrayerCategory];
+
+    if (currentPrayerIndex >= pages.length - 1) {
+
+        return;
+
+    }
+
+
+    isPageTurning = true;
+
+
+    let bookPage =
+        document.getElementById("book-page");
+
+
+    bookPage.classList.remove("turn-next");
+
+    bookPage.classList.remove("turn-previous");
+
+    void bookPage.offsetWidth;
+
+
+    bookPage.classList.add("flipping");
+
+    bookPage.classList.add("turn-next");
+
+
+    setTimeout(function() {
+
+        currentPrayerIndex++;
+
+        displayPrayerPage();
+
+        isPageTurning = false;
+
+    }, 850);
+
+}
+
+
+/* =========================
+   PREVIOUS PAGE
+========================= */
+
+function previousPrayer() {
+
+    if (isPageTurning) {
+        return;
+    }
+
+    if (currentPrayerIndex <= 0) {
+
+        return;
+
+    }
+
+
+    isPageTurning = true;
+
+    currentPrayerIndex--;
+
+
+    let bookPage =
+        document.getElementById("book-page");
+
+
+    bookPage.classList.remove("turn-next");
+
+    bookPage.classList.remove("turn-previous");
+
+    bookPage.classList.add("flipping");
+
+    bookPage.classList.add("turn-next");
+
+
+    setTimeout(function() {
+
+        displayPrayerPage();
+
+        bookPage.classList.remove("turn-next");
+
+        bookPage.classList.add("turn-previous");
+
+    }, 50);
+
+
+    setTimeout(function() {
+
+        bookPage.classList.remove("turn-previous");
+
+        isPageTurning = false;
+
+    }, 950);
+
+}
+
+
+/* =========================
+   SWIPE GESTURE
+========================= */
+
+let swipeStartX = 0;
+let swipeStartY = 0;
+
+const bookPageElement =
+    document.getElementById("book-page");
+
+
+bookPageElement.addEventListener("touchstart", function(event) {
+
+    if (event.touches.length !== 1) {
+        return;
+    }
+
+    swipeStartX =
+        event.touches[0].clientX;
+
+    swipeStartY =
+        event.touches[0].clientY;
+
+}, { passive: true });
+
+
+bookPageElement.addEventListener("touchend", function(event) {
+
+    if (event.changedTouches.length !== 1) {
+        return;
+    }
+
+    let swipeEndX =
+        event.changedTouches[0].clientX;
+
+    let swipeEndY =
+        event.changedTouches[0].clientY;
+
+
+    let differenceX =
+        swipeEndX - swipeStartX;
+
+    let differenceY =
+        swipeEndY - swipeStartY;
+
+
+    /* Ignore mostly vertical movement */
+
+    if (Math.abs(differenceX) < 50) {
+        return;
+    }
+
+    if (Math.abs(differenceX) < Math.abs(differenceY)) {
+        return;
+    }
+
+
+    /* Swipe LEFT = NEXT */
+
+    if (differenceX < 0) {
+
+        nextPrayer();
+
+    }
+
+
+    /* Swipe RIGHT = PREVIOUS */
+
+    else {
+
+        previousPrayer();
+
+    }
+
+}, { passive: true });
+
+
+/* =========================
+   BACK TO CATEGORY
+========================= */
+
+function backToPrayerCategory() {
+
+    document.getElementById("prayer-book-viewer").style.display = "none";
+
+
+    if (currentPrayerCategory === "daily") {
+
+        document.getElementById("daily-prayer-menu").style.display = "block";
+
+    }
+
+
+    else if (currentPrayerCategory === "common") {
+
+        document.getElementById("common-prayer-menu").style.display = "block";
+
+    }
+
+}
+
+
+/* =========================
+   BACK TO PRAYER CATEGORIES
+========================= */
+
+function backToPrayerCategories() {
+
+    document.getElementById("daily-prayer-menu").style.display = "none";
+
+    document.getElementById("common-prayer-menu").style.display = "none";
+
+    document.getElementById("prayer-book-viewer").style.display = "none";
+
+    document.getElementById("prayer-library").style.display = "block";
+
+}
+
+
+/* =========================
+   BACK TO MAIN MENU
+========================= */
+
+function backToMainMenu() {
+
+    document.querySelector(".quick-buttons").style.display = "block";
+
+    document.getElementById("prayer-library").style.display = "none";
+
+    document.getElementById("daily-prayer-menu").style.display = "none";
+
+    document.getElementById("common-prayer-menu").style.display = "none";
+
+    document.getElementById("prayer-book-viewer").style.display = "none";
+
+    /* RESTORE AI CHAT */
+
+    document.querySelector(".question-area").style.display = "flex";
+
+    document.getElementById("answer-box").style.display = "block";
+
+    typeAnswer(
+        "Ask me something about the parish."
+    );
+
+}
+
+
+/* =========================
+   DAILY GOSPEL
+========================= */
+
+function loadDailyGospel() {
+
+    let today = new Date();
+
+    let year = today.getFullYear();
+
+    let month =
+        String(today.getMonth() + 1).padStart(2, "0");
+
+    let day =
+        String(today.getDate()).padStart(2, "0");
+
+    let todayDate =
+        year + "-" + month + "-" + day;
+
+
+    const dailyMessages = {
+
+        "2026-08-25": {
+            message:
+            "Jesus reminds us that true faith is not only about outward religious practices. We are called to live with justice, mercy and faithfulness, allowing God to transform our hearts.",
+
+            prayer:
+            "Lord Jesus, help me to live my faith sincerely. Give me a heart that chooses mercy, justice and faithfulness. Guide me to follow You each day. Amen."
+        },
+
+        "2026-08-26": {
+            message:
+            "Jesus warns us against hypocrisy and reminds us that what is inside our hearts matters more than how we appear to others. God desires sincerity and a heart that is truly devoted to Him.",
+
+            prayer:
+            "Lord Jesus, purify my heart and help me to live honestly and humbly. May my actions always reflect the faith I profess. Amen."
+        },
+
+        "2026-08-27": {
+            message:
+            "Jesus calls us to remain watchful and faithful. We do not know when He will come, so each day is an opportunity to serve God faithfully and care for those around us.",
+
+            prayer:
+            "Lord Jesus, keep my heart awake and ready for You. Help me to serve faithfully, love others and make good use of every day You give me. Amen."
+        },
+
+        "2026-08-28": {
+            message:
+            "Jesus teaches us through the parable of the wise and foolish bridesmaids to remain prepared and keep the light of faith alive. Our relationship with God requires daily faithfulness and love.",
+
+            prayer:
+            "Lord Jesus, keep the light of faith burning in my heart. Help me remain faithful, prepared and generous in loving You and serving others. Amen."
+        },
+
+        "2026-08-29": {
+            message:
+            "John the Baptist remained faithful to God's truth even when it brought suffering. His example calls us to stand firmly for what is right and remain faithful to Christ.",
+
+            prayer:
+            "Lord Jesus, give me the courage of John the Baptist to stand for truth and what is right. Strengthen my faith when following You becomes difficult. Amen."
+        }
+
+    };
+
+
+    typeAnswer(
+        "📖 Loading today's Gospel..."
+    );
+
+
+    fetch(
+        "https://cpbjr.github.io/catholic-readings-api/readings/" +
+        year + "/" +
+        month + "-" +
+        day +
+        ".json"
+    )
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        let firstReading =
+            data.readings.firstReading;
+
+        let psalm =
+            data.readings.psalm;
+
+        let secondReading =
+            data.readings.secondReading;
+
+        let gospel =
+            data.readings.gospel;
+
+
+        let readingLink =
+            "https://www.vaticannews.va/en/word-of-the-day/" +
+            year + "/" +
+            month + "/" +
+            day +
+            ".html";
+
+
+        let todayMessage =
+            dailyMessages[todayDate];
+
+
+        if (!todayMessage) {
+
+            todayMessage = {
+
+                message:
+                "Today's message will be updated soon.",
+
+                prayer:
+                "Lord Jesus, guide us and strengthen our faith each day. Amen."
+
+            };
+
+        }
+
+
+        let fullAnswer =
+
+            "📖 FIRST READING\n\n" +
+            firstReading + "\n\n" +
+
+            "🎵 RESPONSORIAL PSALM\n\n" +
+            psalm + "\n\n" +
+
+            (
+                secondReading
+                ?
+                "📖 SECOND READING\n\n" +
+                secondReading + "\n\n"
+                :
+                ""
+            ) +
+
+            "✝️ GOSPEL\n\n" +
+            gospel + "\n\n" +
+
+            "📝 TODAY'S MESSAGE\n\n" +
+            todayMessage.message + "\n\n" +
+
+            "🙏 TODAY'S PRAYER\n\n" +
+            todayMessage.prayer + "\n\n" +
+
+            "VATICAN_LINK:" +
+            readingLink;
+
+
+        typeAnswer(fullAnswer);
+
+    })
+
+
+    .catch(error => {
+
+        console.log(
+            "Gospel loading error:",
+            error
+        );
+
+        typeAnswer(
+
+            "📖 DAILY READINGS\n\n" +
+
+            "Unable to load today's readings at the moment.\n\n" +
+
+            "Please try again shortly."
+
+        );
+
+    });
+
+}
+
+</script>
+
+</body>
+
